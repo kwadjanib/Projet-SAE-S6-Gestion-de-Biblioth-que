@@ -21,9 +21,6 @@ class Emprunt
     #[ORM\Column]
     private ?\DateTime $dateRetour = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Adherent = null;
-
     #[ORM\ManyToOne(inversedBy: 'emprunts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Adherent $adherent = null;
@@ -64,18 +61,6 @@ class Emprunt
     public function setDateRetour(\DateTime $dateRetour): static
     {
         $this->dateRetour = $dateRetour;
-
-        return $this;
-    }
-
-    public function getAdherent(): ?string
-    {
-        return $this->Adherent;
-    }
-
-    public function setAdherent(string $Adherent): static
-    {
-        $this->Adherent = $Adherent;
 
         return $this;
     }
