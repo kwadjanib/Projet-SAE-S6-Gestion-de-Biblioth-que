@@ -25,6 +25,9 @@ class Livre
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoCouverture = null;
 
+    #[ORM\ManyToOne(inversedBy: 'livre')]
+    private ?Emprunt $emprunt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Livre
     public function setPhotoCouverture(?string $photoCouverture): static
     {
         $this->photoCouverture = $photoCouverture;
+
+        return $this;
+    }
+
+    public function getEmprunt(): ?Emprunt
+    {
+        return $this->emprunt;
+    }
+
+    public function setEmprunt(?Emprunt $emprunt): static
+    {
+        $this->emprunt = $emprunt;
 
         return $this;
     }
