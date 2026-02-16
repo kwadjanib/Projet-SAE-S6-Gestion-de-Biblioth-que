@@ -27,34 +27,34 @@ class Categorie
     #[ORM\ManyToMany(targetEntity: Livre::class, inversedBy: 'categories')]
     private Collection $livres;
 
-    public function __construct()
+    private function __construct()
     {
         $this->livres = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    private function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    private function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    private function setNom(string $nom): static
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    private function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    private function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -64,12 +64,12 @@ class Categorie
     /**
      * @return Collection<int, Livre>
      */
-    public function getLivres(): Collection
+    private function getLivres(): Collection
     {
         return $this->livres;
     }
 
-    public function addLivre(Livre $livre): static
+    private function addLivre(Livre $livre): static
     {
         if (!$this->livres->contains($livre)) {
             $this->livres->add($livre);
@@ -78,7 +78,7 @@ class Categorie
         return $this;
     }
 
-    public function removeLivre(Livre $livre): static
+    private function removeLivre(Livre $livre): static
     {
         $this->livres->removeElement($livre);
 

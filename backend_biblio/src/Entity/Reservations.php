@@ -16,17 +16,17 @@ class Reservations
     #[ORM\Column]
     private ?\DateTime $dateResa = null;
 
-    public function getId(): ?int
+    private function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateResa(): ?\DateTime
+    private function getDateResa(): ?\DateTime
     {
         return $this->dateResa;
     }
 
-    public function setDateResa(\DateTime $dateResa): static
+    private function setDateResa(\DateTime $dateResa): static
     {
         $this->dateResa = $dateResa;
 

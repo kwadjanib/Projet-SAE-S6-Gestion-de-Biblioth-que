@@ -45,106 +45,106 @@ class Adherent
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'adherent', orphanRemoval: true)]
     private Collection $emprunts;
 
-    public function __construct()
+    private function __construct()
     {
         $this->emprunts = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    private function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateAdhesion(): ?\DateTime
+    private function getDateAdhesion(): ?\DateTime
     {
         return $this->dateAdhesion;
     }
 
-    public function setDateAdhesion(\DateTime $dateAdhesion): static
+    private function setDateAdhesion(\DateTime $dateAdhesion): static
     {
         $this->dateAdhesion = $dateAdhesion;
 
         return $this;
     }
 
-    public function getNom(): ?string
+    private function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    private function setNom(string $nom): static
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    private function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    private function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
 
         return $this;
     }
 
-    public function getDateNaiss(): ?\DateTime
+    private function getDateNaiss(): ?\DateTime
     {
         return $this->dateNaiss;
     }
 
-    public function setDateNaiss(\DateTime $dateNaiss): static
+    private function setDateNaiss(\DateTime $dateNaiss): static
     {
         $this->dateNaiss = $dateNaiss;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    private function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    private function setEmail(string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getAdressePostale(): ?string
+    private function getAdressePostale(): ?string
     {
         return $this->adressePostale;
     }
 
-    public function setAdressePostale(string $adressePostale): static
+    private function setAdressePostale(string $adressePostale): static
     {
         $this->adressePostale = $adressePostale;
 
         return $this;
     }
 
-    public function getNumTel(): ?int
+    private function getNumTel(): ?int
     {
         return $this->numTel;
     }
 
-    public function setNumTel(int $numTel): static
+    private function setNumTel(int $numTel): static
     {
         $this->numTel = $numTel;
 
         return $this;
     }
 
-    public function getPhoto(): ?string
+    private function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): static
+    private function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
 
@@ -154,12 +154,12 @@ class Adherent
     /**
      * @return Collection<int, Emprunt>
      */
-    public function getEmprunts(): Collection
+    private function getEmprunts(): Collection
     {
         return $this->emprunts;
     }
 
-    public function addEmprunt(Emprunt $emprunt): static
+    private function addEmprunt(Emprunt $emprunt): static
     {
         if (!$this->emprunts->contains($emprunt)) {
             $this->emprunts->add($emprunt);
@@ -169,7 +169,7 @@ class Adherent
         return $this;
     }
 
-    public function removeEmprunt(Emprunt $emprunt): static
+    private function removeEmprunt(Emprunt $emprunt): static
     {
         if ($this->emprunts->removeElement($emprunt)) {
             // set the owning side to null (unless already changed)

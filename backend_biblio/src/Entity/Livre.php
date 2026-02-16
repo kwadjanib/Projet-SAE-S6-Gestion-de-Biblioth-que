@@ -36,70 +36,70 @@ class Livre
     #[ORM\ManyToMany(targetEntity: Categorie::class, mappedBy: 'livres')]
     private Collection $categories;
 
-    public function __construct()
+    private function __construct()
     {
         $this->categories = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    private function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitre(): ?string
+    private function getTitre(): ?string
     {
         return $this->titre;
     }
 
-    public function setTitre(string $titre): static
+    private function setTitre(string $titre): static
     {
         $this->titre = $titre;
 
         return $this;
     }
 
-    public function getDateSortie(): ?\DateTime
+    private function getDateSortie(): ?\DateTime
     {
         return $this->dateSortie;
     }
 
-    public function setDateSortie(\DateTime $dateSortie): static
+    private function setDateSortie(\DateTime $dateSortie): static
     {
         $this->dateSortie = $dateSortie;
 
         return $this;
     }
 
-    public function getLangue(): ?string
+    private function getLangue(): ?string
     {
         return $this->langue;
     }
 
-    public function setLangue(string $langue): static
+    private function setLangue(string $langue): static
     {
         $this->langue = $langue;
 
         return $this;
     }
 
-    public function getPhotoCouverture(): ?string
+    private function getPhotoCouverture(): ?string
     {
         return $this->photoCouverture;
     }
 
-    public function setPhotoCouverture(?string $photoCouverture): static
+    private function setPhotoCouverture(?string $photoCouverture): static
     {
         $this->photoCouverture = $photoCouverture;
 
         return $this;
     }
 
-    public function getEmprunt(): ?Emprunt
+    private function getEmprunt(): ?Emprunt
     {
         return $this->emprunt;
     }
 
-    public function setEmprunt(?Emprunt $emprunt): static
+    private function setEmprunt(?Emprunt $emprunt): static
     {
         $this->emprunt = $emprunt;
 
@@ -109,12 +109,12 @@ class Livre
     /**
      * @return Collection<int, Categorie>
      */
-    public function getCategories(): Collection
+    private function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function addCategory(Categorie $category): static
+    private function addCategory(Categorie $category): static
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
@@ -124,7 +124,7 @@ class Livre
         return $this;
     }
 
-    public function removeCategory(Categorie $category): static
+    private function removeCategory(Categorie $category): static
     {
         if ($this->categories->removeElement($category)) {
             $category->removeLivre($this);
