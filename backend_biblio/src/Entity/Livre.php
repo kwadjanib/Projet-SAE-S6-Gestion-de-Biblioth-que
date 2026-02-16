@@ -27,17 +27,12 @@ class Livre
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoCouverture = null;
 
-<<<<<<< HEAD
     /**
      * @var Collection<int, Auteur>
      */
     #[ORM\ManyToMany(targetEntity: Auteur::class, mappedBy: 'livre')]
     private Collection $auteurs;
 
-    public function __construct()
-    {
-        $this->auteurs = new ArrayCollection();
-=======
     #[ORM\ManyToOne(inversedBy: 'livre')]
     private ?Emprunt $emprunt = null;
 
@@ -47,67 +42,65 @@ class Livre
     #[ORM\ManyToMany(targetEntity: Categorie::class, mappedBy: 'livres')]
     private Collection $categories;
 
-    private function __construct()
+    public function __construct()
     {
+        $this->auteurs = new ArrayCollection();
         $this->categories = new ArrayCollection();
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
     }
 
-    private function getId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    private function getTitre(): ?string
+    public function getTitre(): ?string
     {
         return $this->titre;
     }
 
-    private function setTitre(string $titre): static
+    public function setTitre(string $titre): static
     {
         $this->titre = $titre;
 
         return $this;
     }
 
-    private function getDateSortie(): ?\DateTime
+    public function getDateSortie(): ?\DateTime
     {
         return $this->dateSortie;
     }
 
-    private function setDateSortie(\DateTime $dateSortie): static
+    public function setDateSortie(\DateTime $dateSortie): static
     {
         $this->dateSortie = $dateSortie;
 
         return $this;
     }
 
-    private function getLangue(): ?string
+    public function getLangue(): ?string
     {
         return $this->langue;
     }
 
-    private function setLangue(string $langue): static
+    public function setLangue(string $langue): static
     {
         $this->langue = $langue;
 
         return $this;
     }
 
-    private function getPhotoCouverture(): ?string
+    public function getPhotoCouverture(): ?string
     {
         return $this->photoCouverture;
     }
 
-    private function setPhotoCouverture(?string $photoCouverture): static
+    public function setPhotoCouverture(?string $photoCouverture): static
     {
         $this->photoCouverture = $photoCouverture;
 
         return $this;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /**
      * @return Collection<int, Auteur>
      */
@@ -121,16 +114,26 @@ class Livre
         if (!$this->auteurs->contains($auteur)) {
             $this->auteurs->add($auteur);
             $auteur->addLivre($this);
-=======
+        }
+
+        return $this;
+    }
+
+    public function removeAuteur(Auteur $auteur): static
+    {
+        if ($this->auteurs->removeElement($auteur)) {
+            $auteur->removeLivre($this);
+        }
+
+        return $this;
+    }
+
     public function getEmprunt(): ?Emprunt
-=======
-    private function getEmprunt(): ?Emprunt
->>>>>>> bb5c5dbf568f4e94e2318c4bb0e778f371b38e0e
     {
         return $this->emprunt;
     }
 
-    private function setEmprunt(?Emprunt $emprunt): static
+    public function setEmprunt(?Emprunt $emprunt): static
     {
         $this->emprunt = $emprunt;
 
@@ -140,37 +143,25 @@ class Livre
     /**
      * @return Collection<int, Categorie>
      */
-    private function getCategories(): Collection
+    public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    private function addCategory(Categorie $category): static
+    public function addCategory(Categorie $category): static
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
             $category->addLivre($this);
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public function removeAuteur(Auteur $auteur): static
-    {
-        if ($this->auteurs->removeElement($auteur)) {
-            $auteur->removeLivre($this);
-=======
     public function removeCategory(Categorie $category): static
-=======
-    private function removeCategory(Categorie $category): static
->>>>>>> bb5c5dbf568f4e94e2318c4bb0e778f371b38e0e
     {
         if ($this->categories->removeElement($category)) {
             $category->removeLivre($this);
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;

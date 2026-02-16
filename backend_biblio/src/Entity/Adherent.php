@@ -40,122 +40,118 @@ class Adherent
     private ?string $photo = null;
 
     /**
-<<<<<<< HEAD
      * @var Collection<int, Reservations>
      */
     #[ORM\OneToMany(targetEntity: Reservations::class, mappedBy: 'adherent', orphanRemoval: true)]
     private Collection $reservations;
 
-    public function __construct()
-    {
-        $this->reservations = new ArrayCollection();
-=======
+    /**
      * @var Collection<int, Emprunt>
      */
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'adherent', orphanRemoval: true)]
     private Collection $emprunts;
 
-    private function __construct()
+    public function __construct()
     {
+        $this->reservations = new ArrayCollection();
         $this->emprunts = new ArrayCollection();
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
     }
 
-    private function getId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    private function getDateAdhesion(): ?\DateTime
+    public function getDateAdhesion(): ?\DateTime
     {
         return $this->dateAdhesion;
     }
 
-    private function setDateAdhesion(\DateTime $dateAdhesion): static
+    public function setDateAdhesion(\DateTime $dateAdhesion): static
     {
         $this->dateAdhesion = $dateAdhesion;
 
         return $this;
     }
 
-    private function getNom(): ?string
+    public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    private function setNom(string $nom): static
+    public function setNom(string $nom): static
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    private function getPrenom(): ?string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    private function setPrenom(string $prenom): static
+    public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
 
         return $this;
     }
 
-    private function getDateNaiss(): ?\DateTime
+    public function getDateNaiss(): ?\DateTime
     {
         return $this->dateNaiss;
     }
 
-    private function setDateNaiss(\DateTime $dateNaiss): static
+    public function setDateNaiss(\DateTime $dateNaiss): static
     {
         $this->dateNaiss = $dateNaiss;
 
         return $this;
     }
 
-    private function getEmail(): ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    private function setEmail(string $email): static
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    private function getAdressePostale(): ?string
+    public function getAdressePostale(): ?string
     {
         return $this->adressePostale;
     }
 
-    private function setAdressePostale(string $adressePostale): static
+    public function setAdressePostale(string $adressePostale): static
     {
         $this->adressePostale = $adressePostale;
 
         return $this;
     }
 
-    private function getNumTel(): ?int
+    public function getNumTel(): ?int
     {
         return $this->numTel;
     }
 
-    private function setNumTel(int $numTel): static
+    public function setNumTel(int $numTel): static
     {
         $this->numTel = $numTel;
 
         return $this;
     }
 
-    private function getPhoto(): ?string
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    private function setPhoto(?string $photo): static
+    public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
 
@@ -163,7 +159,6 @@ class Adherent
     }
 
     /**
-<<<<<<< HEAD
      * @return Collection<int, Reservations>
      */
     public function getReservations(): Collection
@@ -176,44 +171,47 @@ class Adherent
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
             $reservation->setAdherent($this);
-=======
-     * @return Collection<int, Emprunt>
-     */
-    private function getEmprunts(): Collection
-    {
-        return $this->emprunts;
-    }
-
-    private function addEmprunt(Emprunt $emprunt): static
-    {
-        if (!$this->emprunts->contains($emprunt)) {
-            $this->emprunts->add($emprunt);
-            $emprunt->setAdherent($this);
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     public function removeReservation(Reservations $reservation): static
     {
         if ($this->reservations->removeElement($reservation)) {
             // set the owning side to null (unless already changed)
             if ($reservation->getAdherent() === $this) {
                 $reservation->setAdherent(null);
-=======
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunts(): Collection
+    {
+        return $this->emprunts;
+    }
+
+    public function addEmprunt(Emprunt $emprunt): static
+    {
+        if (!$this->emprunts->contains($emprunt)) {
+            $this->emprunts->add($emprunt);
+            $emprunt->setAdherent($this);
+        }
+
+        return $this;
+    }
+
     public function removeEmprunt(Emprunt $emprunt): static
-=======
-    private function removeEmprunt(Emprunt $emprunt): static
->>>>>>> bb5c5dbf568f4e94e2318c4bb0e778f371b38e0e
     {
         if ($this->emprunts->removeElement($emprunt)) {
             // set the owning side to null (unless already changed)
             if ($emprunt->getAdherent() === $this) {
                 $emprunt->setAdherent(null);
->>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
             }
         }
 

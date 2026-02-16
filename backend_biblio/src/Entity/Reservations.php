@@ -16,32 +16,25 @@ class Reservations
     #[ORM\Column]
     private ?\DateTime $dateResa = null;
 
-<<<<<<< HEAD
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Adherent $adherent = null;
 
-    #[ORM\OneToOne(targetEntity: self::class, inversedBy: 'reservations', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?self $livre = null;
-
-    #[ORM\OneToOne(targetEntity: self::class, mappedBy: 'livre', cascade: ['persist', 'remove'])]
-    private ?self $reservations = null;
+    private ?Livre $livre = null;
 
     public function getId(): ?int
-=======
-    private function getId(): ?int
->>>>>>> bb5c5dbf568f4e94e2318c4bb0e778f371b38e0e
     {
         return $this->id;
     }
 
-    private function getDateResa(): ?\DateTime
+    public function getDateResa(): ?\DateTime
     {
         return $this->dateResa;
     }
 
-    private function setDateResa(\DateTime $dateResa): static
+    public function setDateResa(\DateTime $dateResa): static
     {
         $this->dateResa = $dateResa;
 
@@ -60,31 +53,14 @@ class Reservations
         return $this;
     }
 
-    public function getLivre(): ?self
+    public function getLivre(): ?Livre
     {
         return $this->livre;
     }
 
-    public function setLivre(self $livre): static
+    public function setLivre(?Livre $livre): static
     {
         $this->livre = $livre;
-
-        return $this;
-    }
-
-    public function getReservations(): ?self
-    {
-        return $this->reservations;
-    }
-
-    public function setReservations(self $reservations): static
-    {
-        // set the owning side of the relation if necessary
-        if ($reservations->getLivre() !== $this) {
-            $reservations->setLivre($this);
-        }
-
-        $this->reservations = $reservations;
 
         return $this;
     }

@@ -36,7 +36,6 @@ class Auteur
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-<<<<<<< HEAD
     /**
      * @var Collection<int, Livre>
      */
@@ -49,91 +48,88 @@ class Auteur
     }
 
     public function getId(): ?int
-=======
-    private function getId(): ?int
->>>>>>> bb5c5dbf568f4e94e2318c4bb0e778f371b38e0e
     {
         return $this->id;
     }
 
-    private function getNom(): ?string
+    public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    private function setNom(string $nom): static
+    public function setNom(string $nom): static
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    private function getPrenom(): ?string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    private function setPrenom(string $prenom): static
+    public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
 
         return $this;
     }
 
-    private function getDateNaissance(): ?\DateTimeImmutable
+    public function getDateNaissance(): ?\DateTimeImmutable
     {
         return $this->dateNaissance;
     }
 
-    private function setDateNaissance(\DateTimeImmutable $dateNaissance): static
+    public function setDateNaissance(\DateTimeImmutable $dateNaissance): static
     {
         $this->dateNaissance = $dateNaissance;
 
         return $this;
     }
 
-    private function getDateDeces(): ?\DateTimeImmutable
+    public function getDateDeces(): ?\DateTimeImmutable
     {
         return $this->dateDeces;
     }
 
-    private function setDateDeces(?\DateTimeImmutable $dateDeces): static
+    public function setDateDeces(?\DateTimeImmutable $dateDeces): static
     {
         $this->dateDeces = $dateDeces;
 
         return $this;
     }
 
-    private function getNationalite(): ?string
+    public function getNationalite(): ?string
     {
         return $this->nationalite;
     }
 
-    private function setNationalite(?string $nationalite): static
+    public function setNationalite(?string $nationalite): static
     {
         $this->nationalite = $nationalite;
 
         return $this;
     }
 
-    private function getPhoto(): ?string
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    private function setPhoto(?string $photo): static
+    public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
 
         return $this;
     }
 
-    private function getDescription(): ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    private function setDescription(?string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
