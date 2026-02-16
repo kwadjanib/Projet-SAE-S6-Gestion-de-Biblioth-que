@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
@@ -24,6 +26,17 @@ class Livre
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoCouverture = null;
+
+    /**
+     * @var Collection<int, Auteur>
+     */
+    #[ORM\ManyToMany(targetEntity: Auteur::class, mappedBy: 'livre')]
+    private Collection $auteurs;
+
+    public function __construct()
+    {
+        $this->auteurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +87,33 @@ class Livre
     public function setPhotoCouverture(?string $photoCouverture): static
     {
         $this->photoCouverture = $photoCouverture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Auteur>
+     */
+    public function getAuteurs(): Collection
+    {
+        return $this->auteurs;
+    }
+
+    public function addAuteur(Auteur $auteur): static
+    {
+        if (!$this->auteurs->contains($auteur)) {
+            $this->auteurs->add($auteur);
+            $auteur->addLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuteur(Auteur $auteur): static
+    {
+        if ($this->auteurs->removeElement($auteur)) {
+            $auteur->removeLivre($this);
+        }
 
         return $this;
     }
