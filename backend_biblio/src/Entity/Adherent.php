@@ -40,6 +40,7 @@ class Adherent
     private ?string $photo = null;
 
     /**
+<<<<<<< HEAD
      * @var Collection<int, Reservations>
      */
     #[ORM\OneToMany(targetEntity: Reservations::class, mappedBy: 'adherent', orphanRemoval: true)]
@@ -48,6 +49,16 @@ class Adherent
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+=======
+     * @var Collection<int, Emprunt>
+     */
+    #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'adherent', orphanRemoval: true)]
+    private Collection $emprunts;
+
+    public function __construct()
+    {
+        $this->emprunts = new ArrayCollection();
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
     }
 
     public function getId(): ?int
@@ -152,6 +163,7 @@ class Adherent
     }
 
     /**
+<<<<<<< HEAD
      * @return Collection<int, Reservations>
      */
     public function getReservations(): Collection
@@ -164,17 +176,40 @@ class Adherent
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
             $reservation->setAdherent($this);
+=======
+     * @return Collection<int, Emprunt>
+     */
+    public function getEmprunts(): Collection
+    {
+        return $this->emprunts;
+    }
+
+    public function addEmprunt(Emprunt $emprunt): static
+    {
+        if (!$this->emprunts->contains($emprunt)) {
+            $this->emprunts->add($emprunt);
+            $emprunt->setAdherent($this);
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;
     }
 
+<<<<<<< HEAD
     public function removeReservation(Reservations $reservation): static
     {
         if ($this->reservations->removeElement($reservation)) {
             // set the owning side to null (unless already changed)
             if ($reservation->getAdherent() === $this) {
                 $reservation->setAdherent(null);
+=======
+    public function removeEmprunt(Emprunt $emprunt): static
+    {
+        if ($this->emprunts->removeElement($emprunt)) {
+            // set the owning side to null (unless already changed)
+            if ($emprunt->getAdherent() === $this) {
+                $emprunt->setAdherent(null);
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
             }
         }
 

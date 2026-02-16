@@ -27,6 +27,7 @@ class Livre
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoCouverture = null;
 
+<<<<<<< HEAD
     /**
      * @var Collection<int, Auteur>
      */
@@ -36,6 +37,20 @@ class Livre
     public function __construct()
     {
         $this->auteurs = new ArrayCollection();
+=======
+    #[ORM\ManyToOne(inversedBy: 'livre')]
+    private ?Emprunt $emprunt = null;
+
+    /**
+     * @var Collection<int, Categorie>
+     */
+    #[ORM\ManyToMany(targetEntity: Categorie::class, mappedBy: 'livres')]
+    private Collection $categories;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
     }
 
     public function getId(): ?int
@@ -91,6 +106,7 @@ class Livre
         return $this;
     }
 
+<<<<<<< HEAD
     /**
      * @return Collection<int, Auteur>
      */
@@ -104,15 +120,49 @@ class Livre
         if (!$this->auteurs->contains($auteur)) {
             $this->auteurs->add($auteur);
             $auteur->addLivre($this);
+=======
+    public function getEmprunt(): ?Emprunt
+    {
+        return $this->emprunt;
+    }
+
+    public function setEmprunt(?Emprunt $emprunt): static
+    {
+        $this->emprunt = $emprunt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Categorie>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Categorie $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addLivre($this);
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;
     }
 
+<<<<<<< HEAD
     public function removeAuteur(Auteur $auteur): static
     {
         if ($this->auteurs->removeElement($auteur)) {
             $auteur->removeLivre($this);
+=======
+    public function removeCategory(Categorie $category): static
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeLivre($this);
+>>>>>>> f384afe350dd1fc94f0339c7ee4d1e256faee60f
         }
 
         return $this;
