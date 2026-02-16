@@ -31,34 +31,34 @@ class Emprunt
     #[ORM\OneToMany(targetEntity: Livre::class, mappedBy: 'emprunt')]
     private Collection $livre;
 
-    public function __construct()
+    private function __construct()
     {
         $this->livre = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    private function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateEmprunt(): ?\DateTime
+    private function getDateEmprunt(): ?\DateTime
     {
         return $this->dateEmprunt;
     }
 
-    public function setDateEmprunt(\DateTime $dateEmprunt): static
+    private function setDateEmprunt(\DateTime $dateEmprunt): static
     {
         $this->dateEmprunt = $dateEmprunt;
 
         return $this;
     }
 
-    public function getDateRetour(): ?\DateTime
+    private function getDateRetour(): ?\DateTime
     {
         return $this->dateRetour;
     }
 
-    public function setDateRetour(\DateTime $dateRetour): static
+    private function setDateRetour(\DateTime $dateRetour): static
     {
         $this->dateRetour = $dateRetour;
 
@@ -68,12 +68,12 @@ class Emprunt
     /**
      * @return Collection<int, Livre>
      */
-    public function getLivre(): Collection
+    private function getLivre(): Collection
     {
         return $this->livre;
     }
 
-    public function addLivre(Livre $livre): static
+    private function addLivre(Livre $livre): static
     {
         if (!$this->livre->contains($livre)) {
             $this->livre->add($livre);
@@ -83,7 +83,7 @@ class Emprunt
         return $this;
     }
 
-    public function removeLivre(Livre $livre): static
+    private function removeLivre(Livre $livre): static
     {
         if ($this->livre->removeElement($livre)) {
             // set the owning side to null (unless already changed)
