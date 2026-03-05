@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\EmpruntRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmpruntRepository::class)]
@@ -15,25 +13,23 @@ class Emprunt
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateEmprunt = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $dateEmprunt = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateRetour = null;
+    #[ORM\Column(type: 'datetime', nullable: true)] // Nullable tant que le livre n'est pas rendu
+    private ?\DateTimeInterface $dateRetour = null;
 
-    #[ORM\ManyToOne(inversedBy: 'emprunts')]
+    #[ORM\ManyToOne(targetEntity: Adherent::class, inversedBy: 'emprunts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Adherent $adherent = null;
 
-    /**
-     * @var Collection<int, Livre>
-     */
-    #[ORM\OneToMany(targetEntity: Livre::class, mappedBy: 'emprunt')]
-    private Collection $livre;
+    #[ORM\ManyToOne(targetEntity: Livre::class, inversedBy: 'emprunts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Livre $livre = null;
 
     public function __construct()
     {
-        $this->livre = new ArrayCollection();
+        $this->dateEmprunt = new \DateTime(); // Date du jour par défaut
     }
 
     public function getId(): ?int
@@ -41,57 +37,57 @@ class Emprunt
         return $this->id;
     }
 
-    public function getDateEmprunt(): ?\DateTime
+    public function getDateEmprunt(): ?\DateTimeInterface
     {
         return $this->dateEmprunt;
     }
 
-    public function setDateEmprunt(\DateTime $dateEmprunt): static
+    public function setDateEmprunt(\DateTimeInterface $dateEmprunt): static
     {
         $this->dateEmprunt = $dateEmprunt;
-
         return $this;
     }
 
-    public function getDateRetour(): ?\DateTime
+    public function getDateRetour(): ?\DateTimeInterface
     {
         return $this->dateRetour;
     }
 
-    public function setDateRetour(\DateTime $dateRetour): static
+    public function setDateRetour(?\DateTimeInterface $dateRetour): static
     {
         $this->dateRetour = $dateRetour;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Livre>
-     */
-    public function getLivre(): Collection
+    public function getAdherent(): ?Adherent
+    {
+        return $this->adherent;
+    }
+
+    public function setAdherent(?Adherent $adherent): static
+    {
+        $this->adherent = $adherent;
+        return $this;
+    }
+
+    public function getLivre(): ?Livre
     {
         return $this->livre;
     }
 
-    public function addLivre(Livre $livre): static
+    public function setLivre(?Livre $livre): static
     {
-        if (!$this->livre->contains($livre)) {
-            $this->livre->add($livre);
-            $livre->setEmprunt($this);
-        }
-
+        $this->livre = $livre;
         return $this;
     }
 
-    public function removeLivre(Livre $livre): static
+    // Méthode utilitaire pour EasyAdmin
+    public function __toString(): string
     {
-        if ($this->livre->removeElement($livre)) {
-            // set the owning side to null (unless already changed)
-            if ($livre->getEmprunt() === $this) {
-                $livre->setEmprunt(null);
-            }
-        }
-
-        return $this;
+        return sprintf('%s - %s (%s)',
+            $this->adherent->getNom(),
+            $this->livre->getTitre(),
+            $this->dateEmprunt->format('d/m/Y')
+        );
     }
 }

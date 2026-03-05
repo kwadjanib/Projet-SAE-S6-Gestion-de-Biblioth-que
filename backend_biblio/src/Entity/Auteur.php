@@ -36,127 +36,57 @@ class Auteur
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @var Collection<int, Livre>
-     */
-    #[ORM\ManyToMany(targetEntity: Livre::class, inversedBy: 'auteurs')]
-    private Collection $livre;
+    #[ORM\ManyToMany(targetEntity: Livre::class, mappedBy: 'auteurs')]
+    private Collection $livres;
 
     public function __construct()
     {
-        $this->livre = new ArrayCollection();
+        $this->livres = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
+    public function getNom(): ?string { return $this->nom; }
+    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
+    public function getPrenom(): ?string { return $this->prenom; }
+    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
 
-        return $this;
-    }
+    public function getDateNaissance(): ?\DateTimeImmutable { return $this->dateNaissance; }
+    public function setDateNaissance(\DateTimeImmutable $dateNaissance): static { $this->dateNaissance = $dateNaissance; return $this; }
 
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
+    public function getDateDeces(): ?\DateTimeImmutable { return $this->dateDeces; }
+    public function setDateDeces(?\DateTimeImmutable $dateDeces): static { $this->dateDeces = $dateDeces; return $this; }
 
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
+    public function getNationalite(): ?string { return $this->nationalite; }
+    public function setNationalite(?string $nationalite): static { $this->nationalite = $nationalite; return $this; }
 
-        return $this;
-    }
+    public function getPhoto(): ?string { return $this->photo; }
+    public function setPhoto(?string $photo): static { $this->photo = $photo; return $this; }
 
-    public function getDateNaissance(): ?\DateTimeImmutable
-    {
-        return $this->dateNaissance;
-    }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): static { $this->description = $description; return $this; }
 
-    public function setDateNaissance(\DateTimeImmutable $dateNaissance): static
-    {
-        $this->dateNaissance = $dateNaissance;
-
-        return $this;
-    }
-
-    public function getDateDeces(): ?\DateTimeImmutable
-    {
-        return $this->dateDeces;
-    }
-
-    public function setDateDeces(?\DateTimeImmutable $dateDeces): static
-    {
-        $this->dateDeces = $dateDeces;
-
-        return $this;
-    }
-
-    public function getNationalite(): ?string
-    {
-        return $this->nationalite;
-    }
-
-    public function setNationalite(?string $nationalite): static
-    {
-        $this->nationalite = $nationalite;
-
-        return $this;
-    }
-
-    public function getPhoto(): ?string
-    {
-        return $this->photo;
-    }
-
-    public function setPhoto(?string $photo): static
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Livre>
-     */
-    public function getLivre(): Collection
-    {
-        return $this->livre;
-    }
+    /** @return Collection<int, Livre> */
+    public function getLivres(): Collection { return $this->livres; }
 
     public function addLivre(Livre $livre): static
     {
-        if (!$this->livre->contains($livre)) {
-            $this->livre->add($livre);
+        if (!$this->livres->contains($livre)) {
+            $this->livres->add($livre);
+            // On s'assure que le livre sait aussi qu'il a cet auteur
+            $livre->addAuteur($this);
         }
-
         return $this;
     }
 
     public function removeLivre(Livre $livre): static
     {
-        $this->livre->removeElement($livre);
-
+        if ($this->livres->removeElement($livre)) {
+            $livre->removeAuteur($this);
+        }
         return $this;
     }
+
+    public function __toString(): string { return $this->prenom . ' ' . $this->nom; }
 }
