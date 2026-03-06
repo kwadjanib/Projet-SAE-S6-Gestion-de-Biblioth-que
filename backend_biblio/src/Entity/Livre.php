@@ -30,16 +30,16 @@ class Livre
     /**
      * @var Collection<int, Auteur>
      */
-    #[ORM\ManyToMany(targetEntity: Auteur::class, mappedBy: 'livre')]
+    #[ORM\ManyToMany(targetEntity: Auteur::class, inversedBy: 'livres')]
     private Collection $auteurs;
 
-    #[ORM\ManyToOne(inversedBy: 'livre')]
+    #[ORM\ManyToOne(inversedBy: 'livres')]
     private ?Emprunt $emprunt = null;
 
     /**
      * @var Collection<int, Categorie>
      */
-    #[ORM\ManyToMany(targetEntity: Categorie::class, mappedBy: 'livres')]
+    #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'livres')]
     private Collection $categories;
 
     public function __construct()
@@ -166,4 +166,5 @@ class Livre
 
         return $this;
     }
+    public function __toString(): string { return $this->titre; }
 }

@@ -33,8 +33,8 @@ class Adherent
     #[ORM\Column(length: 255)]
     private ?string $adressePostale = null;
 
-    #[ORM\Column]
-    private ?int $numTel = null;
+    #[ORM\Column(length: 20)]
+    private ?string $numTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
@@ -55,6 +55,7 @@ class Adherent
     {
         $this->reservations = new ArrayCollection();
         $this->emprunts = new ArrayCollection();
+        $this->dateAdhesion = new \DateTime();
     }
 
     public function getId(): ?int
@@ -134,12 +135,12 @@ class Adherent
         return $this;
     }
 
-    public function getNumTel(): ?int
+    public function getNumTel(): ?string
     {
         return $this->numTel;
     }
 
-    public function setNumTel(int $numTel): static
+    public function setNumTel(string $numTel): static
     {
         $this->numTel = $numTel;
 
@@ -216,5 +217,10 @@ class Adherent
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->prenom . ' ' . $this->nom;
     }
 }

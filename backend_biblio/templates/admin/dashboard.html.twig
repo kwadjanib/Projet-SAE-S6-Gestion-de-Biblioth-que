@@ -1,0 +1,73 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Tableau de bord - Bibliothèque{% endblock %}
+
+{% block content_header %}
+    <h1 class="title">
+        <i class="fas fa-tachometer-alt"></i> Tableau de bord
+    </h1>
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        {# Carte Livres #}
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-3x mb-2"></i>
+                    <h2>{{ nbLivres }}</h2>
+                    <p class="card-text">Livres au catalogue</p>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Adhérents #}
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-2"></i>
+                    <h2>{{ nbAdherents }}</h2>
+                    <p class="card-text">Adhérents inscrits</p>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Emprunts en cours #}
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-exchange-alt fa-3x mb-2"></i>
+                    <h2>{{ nbEmpruntsEnCours }}</h2>
+                    <p class="card-text">Emprunts en cours</p>
+                </div>
+            </div>
+        </div>
+
+        {# Carte Retards #}
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x mb-2"></i>
+                    <h2>{{ nbEmpruntsEnRetard }}</h2>
+                    <p class="card-text">Retards détectés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle"></i> Gestion de la Bibliothèque
+                    </h5>
+                    <p class="card-text">
+                        Bienvenue sur votre espace d'administration.
+                        Vous pouvez gérer le catalogue, suivre les prêts et administrer les membres via le menu latéral.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

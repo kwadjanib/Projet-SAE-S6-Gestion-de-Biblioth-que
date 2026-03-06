@@ -39,7 +39,7 @@ class Auteur
     /**
      * @var Collection<int, Livre>
      */
-    #[ORM\ManyToMany(targetEntity: Livre::class, inversedBy: 'auteurs')]
+    #[ORM\ManyToMany(targetEntity: Livre::class, mappedBy: 'auteurs')]
     private Collection $livre;
 
     public function __construct()
@@ -158,5 +158,9 @@ class Auteur
         $this->livre->removeElement($livre);
 
         return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->prenom . ' ' . $this->nom;
     }
 }

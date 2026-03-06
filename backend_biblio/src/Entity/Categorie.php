@@ -24,7 +24,7 @@ class Categorie
     /**
      * @var Collection<int, Livre>
      */
-    #[ORM\ManyToMany(targetEntity: Livre::class, inversedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: Livre::class, mappedBy: 'categories')]
     private Collection $livres;
 
     public function __construct()
@@ -84,4 +84,5 @@ class Categorie
 
         return $this;
     }
+    public function __toString(): string { return $this->nom; }
 }
