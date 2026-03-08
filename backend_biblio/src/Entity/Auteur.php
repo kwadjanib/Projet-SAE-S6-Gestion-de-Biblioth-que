@@ -6,40 +6,49 @@ use App\Repository\AuteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: AuteurRepository::class)]
 class Auteur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['auteur:read', 'livre:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['auteur:read', 'livre:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['auteur:read'])]
     private ?string $prenom = null;
 
     #[ORM\Column]
+    #[Groups(['auteur:read'])]
     private ?\DateTimeImmutable $dateNaissance = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['auteur:read'])]
     private ?\DateTimeImmutable $dateDeces = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['auteur:read'])]
     private ?string $nationalite = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['auteur:read', 'livre:read'])]
     private ?string $photo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['auteur:read', 'livre:read'])]
     private ?string $description = null;
 
     /**
      * @var Collection<int, Livre>
      */
     #[ORM\ManyToMany(targetEntity: Livre::class, mappedBy: 'auteurs')]
+    #[Groups(['auteur:read'])]
     private Collection $livre;
 
     public function __construct()

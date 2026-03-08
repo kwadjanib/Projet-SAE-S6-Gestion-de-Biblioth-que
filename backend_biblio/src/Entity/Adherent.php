@@ -6,6 +6,7 @@ use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AdherentRepository::class)]
 class Adherent
@@ -13,42 +14,54 @@ class Adherent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['adherent:read', 'emprunt:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['adherent:read'])]
     private ?\DateTime $dateAdhesion = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['adherent:read', 'emprunt:read'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['adherent:read', 'emprunt:read'])]
     private ?string $prenom = null;
 
     #[ORM\Column]
+    #[Groups(['adherent:read'])]
     private ?\DateTime $dateNaiss = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['adherent:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['adherent:read'])]
+
     private ?string $adressePostale = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['adherent:read'])]
     private ?string $numTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['adherent:read'])]
     private ?string $photo = null;
 
     /**
      * @var Collection<int, Reservations>
      */
     #[ORM\OneToMany(targetEntity: Reservations::class, mappedBy: 'adherent', orphanRemoval: true)]
+    #[Groups(['adherent:read'])]
     private Collection $reservations;
 
     /**
      * @var Collection<int, Emprunt>
      */
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'adherent', orphanRemoval: true)]
+    #[Groups(['adherent:read'])]
     private Collection $emprunts;
 
     public function __construct()

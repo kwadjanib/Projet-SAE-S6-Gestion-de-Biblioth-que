@@ -6,6 +6,7 @@ use App\Repository\LivreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 class Livre
@@ -13,33 +14,41 @@ class Livre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['livre:read', 'categorie:read', 'auteur:read', 'emprunt:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['livre:read', 'categorie:read', 'auteur:read', 'emprunt:read'])]
     private ?string $titre = null;
 
     #[ORM\Column]
+    #[Groups(['livre:read', 'auteur:read'])]
     private ?\DateTime $dateSortie = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['livre:read', 'emprunt:read'])]
     private ?string $langue = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['livre:read', 'emprunt:read'])]
     private ?string $photoCouverture = null;
 
     /**
      * @var Collection<int, Auteur>
      */
     #[ORM\ManyToMany(targetEntity: Auteur::class, inversedBy: 'livres')]
+    #[Groups(['livre:read'])]
     private Collection $auteurs;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
+    #[Groups(['livre:read'])]
     private ?Emprunt $emprunt = null;
 
     /**
      * @var Collection<int, Categorie>
      */
     #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'livres')]
+    #[Groups(['livre:read'])]
     private Collection $categories;
 
     public function __construct()
