@@ -40,9 +40,15 @@ security:
             # switch_user: true
 
     # Note: Only the *first* matching rule is applied
+    role_hierarchy:
+        # Un bibliothécaire a les droits d'un adhérent
+        ROLE_BIBLIOTHECAIRE: ROLE_ADHERENT
+        # Un responsable a tous les droits
+        ROLE_RESPONABLE:     [ROLE_BIBLIOTHECAIRE, ROLE_ADMIN]
+
     access_control:
-         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Seuls le personnel (Bibliothécaires et Responsables) accède à l'admin
+        - { path: ^/admin, roles: [ROLE_BIBLIOTHECAIRE, ROLE_RESPONABLE] }
 
 when@test:
     security:
