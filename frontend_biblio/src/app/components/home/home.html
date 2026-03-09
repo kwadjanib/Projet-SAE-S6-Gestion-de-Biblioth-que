@@ -1,0 +1,92 @@
+<div class="container mt-4">
+
+<h2>Recherche de livres</h2>
+
+<form (ngSubmit)="rechercher()">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<label class="form-label">Titre</label>
+
+<input
+type="text"
+class="form-control"
+[(ngModel)]="titre"
+name="titre"
+/>
+
+</div>
+
+<div class="col-md-4">
+
+<label class="form-label">Catégorie</label>
+
+<select
+class="form-select"
+[(ngModel)]="categorieId"
+name="categorie">
+
+<option value="">Toutes</option>
+
+@for (cat of categories(); track cat.id) {
+
+<option [value]="cat.id">
+{{ cat.nom }}
+</option>
+
+}
+
+</select>
+
+</div>
+
+<div class="col-md-4 d-flex align-items-end">
+
+<button class="btn btn-primary w-100">
+Rechercher
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<hr>
+
+<h3>Résultats</h3>
+
+<div class="row">
+
+@for (livre of livres(); track livre.id) {
+
+<div class="col-md-3 mb-3">
+
+<div class="card">
+
+<img
+[src]="livre.photoCouverture"
+class="card-img-top"
+/>
+
+<div class="card-body">
+
+<h5 class="card-title">
+{{ livre.titre }}
+</h5>
+
+<p>{{ livre.langue }}</p>
+
+</div>
+
+</div>
+
+</div>
+
+}
+
+</div>
+
+</div>
