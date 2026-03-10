@@ -26,4 +26,14 @@ class CategorieController extends AbstractController
     {
         return $this->json($categorie, 200, [], ['groups' => 'categorie:read']);
     }
+    #[Route('/categorie', name: 'app_api_categorie_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $categorie = new Categorie();
+        $categorie->setNom($data['nom']);
+        $entityManager->persist($categorie);
+        $entityManager->flush();
+        return $this->json($categorie, 201, [], ['groups' => 'categorie:read']);
+    }
 }

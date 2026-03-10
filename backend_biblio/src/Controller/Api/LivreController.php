@@ -25,4 +25,20 @@ class LivreController extends AbstractController
     {
         return $this->json($livre, 200, [], ['groups' => 'livre:read']);
     }
+    #[Route('/livre', name: 'app_api_livre_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $livre = new Livre();
+        $livre->setTitre($data['titre']);
+        $livre->setDateSortie(new \DateTime());
+        $livre->setLangue($data['langue']);
+        $livre->setPhotoCouverture($data['photoCouverture']);
+
+        $entityManager->persist($livre);
+        $entityManager->flush();
+
+        return $this->json($livre, 201, [], ['groups' => 'livre:read']);
+    }
 }

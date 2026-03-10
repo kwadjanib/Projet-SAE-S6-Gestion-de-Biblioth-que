@@ -25,4 +25,20 @@ class EmpruntController extends AbstractController
     {
         return $this->json($emprunt, 200, [], ['groups' => 'emprunt:read']);
     }
+
+    #[Route('/emprunt', name: 'app_api_emprunt_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $emprunt = new Emprunt();
+        $emprunt->setDateEmprunt(new \DateTime());
+        $emprunt->setDateRetour(null);
+        $emprunt->setLivre($data['livre']);
+        $emprunt->setAdherent($data['adherent']);
+        $entityManager->persist($emprunt);
+        $entityManager->flush();
+
+        return $this->json($emprunt, 201, [], ['groups' => 'emprunt:read']);
+    }
 }

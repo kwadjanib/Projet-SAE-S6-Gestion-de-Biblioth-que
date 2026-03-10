@@ -25,4 +25,16 @@ class AdherentController extends AbstractController
     {
         return $this->json($adherent, 200, [], ['groups' => 'adherent:read']);
     }
+    #[Route('/adherent', name: 'app_api_adherent_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $adherent = new Adherent();
+        $adherent->setNom($data['nom']);
+        $adherent->setPrenom($data['prenom']);
+        $adherent->setEmail($data['email']);
+        $entityManager->persist($adherent);
+        $entityManager->flush();
+        return $this->json($adherent, 201, [], ['groups' => 'adherent:read']);
+    }
 }

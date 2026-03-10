@@ -20,9 +20,23 @@ class ReservationController extends AbstractController
         return $this->json($reservations, 200, [], ['groups' => 'reservation:read']);
     }
 
-    #[Route('/reservations/{id}', name: 'app_api_reservation_show', methods: ['GET'])]
+    #[Route('/reservation/{id}', name: 'app_api_reservation_show', methods: ['GET'])]
     public function show(Reservations $reservations): JsonResponse
     {
         return $this->json($reservations, 200, [], ['groups' => 'reservation:read']);
+    }
+    #[Route('/reservation', name: 'app_api_reservation_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $reservation = new Reservations();
+        $reservation->setDateResa(new \DateTime());
+        $reservation->setLivre($data['livre']);
+        $reservation->setAdherent($data['adherent']);
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+
+        return $this->json($reservation, 201, [], ['groups' => 'reservation:read']);
     }
 }
