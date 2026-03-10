@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private API_URL = 'http://localhost:8008/api';
+  private API_URL = 'https://127.0.0.1:8008/api';
 
   private _token = signal<string | null>(localStorage.getItem('jwt_token'));
   private _user = signal<Adherent | null>(this.chargerUserStorage());
@@ -50,7 +50,7 @@ export class AuthService {
   getToken(): string | null {
     return this._token();
   }
-  
+
   mettreAJourUser(user: Adherent) {
     localStorage.setItem('user', JSON.stringify(user));
     this._user.set(user);

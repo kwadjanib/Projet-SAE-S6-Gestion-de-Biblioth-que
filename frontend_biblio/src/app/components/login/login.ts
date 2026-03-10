@@ -14,13 +14,13 @@ export class Login {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  username = '';
+  email = '';
   password = '';
   loading = signal(false);
   erreur = signal('');
 
   connexion() {
-    if (!this.username || !this.password) {
+    if (!this.email || !this.password) {
       this.erreur.set('Veuillez remplir tous les champs.');
       return;
     }
@@ -28,7 +28,7 @@ export class Login {
     this.loading.set(true);
     this.erreur.set('');
 
-    this.auth.login({ username: this.username, password: this.password }).subscribe({
+    this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.loading.set(false);
         this.router.navigate(['/']);
