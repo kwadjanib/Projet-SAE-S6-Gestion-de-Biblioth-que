@@ -1,12 +1,52 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
 
+    <a class="navbar-brand" routerLink="/">Bibliothèque</a>
 
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/livres">Catalogue</a>
+        </li>
+      </ul>
 
+      <ul class="navbar-nav ms-auto">
 
+        @if (auth.estConnecte()) {
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">
+               {{ auth.user()?.prenom }} {{ auth.user()?.nom }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" routerLink="/mon-profil">Profil</a></li>
+              <li><a class="dropdown-item" routerLink="/mes-emprunts">Emprunts</a></li>
+              <li><a class="dropdown-item" routerLink="/mes-reservations">Réservations</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <button class="dropdown-item text-danger" (click)="auth.logout()">
+                  Déconnexion
+                </button>
+              </li>
+            </ul>
+          </li>
+
+        } @else {
+
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Se connecter</a>
+          </li>
+
+        }
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Contenu de la page -->
 <router-outlet />

@@ -11,6 +11,9 @@
         <th>Langue</th>
         <th>Date sortie</th>
         <th>Disponibilité</th>
+        @if (auth.estConnecte()) {
+          <th>Action</th>
+        }
       </tr>
     </thead>
 
@@ -35,6 +38,28 @@
               <span class="badge bg-danger">Indisponible</span>
             }
           </td>
+
+          @if (auth.estConnecte()) {
+            <td>
+              <button
+                class="btn btn-sm btn-outline-primary"
+                [disabled]="reservationEnCours() === livre.id"
+                (click)="reserver(livre.id)">
+                @if (reservationEnCours() === livre.id) {
+                  <span class="spinner-border spinner-border-sm me-1"></span>
+                  Réservation...
+                } @else {
+                  Réserver
+                }
+              </button>
+
+              @if (getMsg(livre.id)) {
+                <div class="alert alert-{{ getMsg(livre.id).type }} py-1 px-2 mt-1 mb-0 small">
+                  {{ getMsg(livre.id).texte }}
+                </div>
+              }
+            </td>
+          }
 
         </tr>
 
