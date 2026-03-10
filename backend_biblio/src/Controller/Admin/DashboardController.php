@@ -21,13 +21,27 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-        // On compte désormais les utilisateurs qui ont le rôle ROLE_ADHERENT
-        // Si vous n'utilisez pas de filtre spécifique, count([]) comptera tout le personnel et les adhérents
+        $empruntsEnCours = $this->em->getRepository(Emprunt::class)->findBy(['dateRetour' => null]);
+        $nbRetards = 0;
+        $empruntsFinis = $this->em->createQuery(
+            'SELECT c.nom as nom, COUNT(l.id) as nb 
+         FROM App\Entity\Emprunt e 
+         JOIN e.livre l 
+         JOIN l.categories c 
+         WHERE e.dateRetour IS NOT NULL 
+         GROUP BY c.nom'
+        )->getResult();
+        foreach ($empruntsEnCours as $emprunt) {
+            if ($emprunt->estEnRetard()) {
+                $nbRetards++;
+            }
+        }
         return $this->render('admin/dashboard.html.twig', [
             'nbLivres' => $this->em->getRepository(Livre::class)->count([]),
-            'nbAdherents' => $this->em->getRepository(Utilisateur::class)->count([]), 
+            'nbAdherents' => $this->em->getRepository(Utilisateur::class)->count([]),
             'nbEmpruntsEnCours' => $this->em->getRepository(Emprunt::class)->count(['dateRetour' => null]),
-            'nbEmpruntsEnRetard' => 0,
+            'nbEmpruntsEnRetard' => $nbRetards,
+            'empruntsFinis' => $empruntsFinis,
         ]);
     }
 
@@ -39,14 +53,14 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Tableau de Bord', 'fa fa-home');
-        
+
         yield MenuItem::section('Gestion');
-        
+
         // On remplace le lien Adherent par Utilisateur
         yield MenuItem::linkToCrud('Membres & Adhérents', 'fas fa-users', Utilisateur::class);
         yield MenuItem::linkToCrud('Emprunts', 'fas fa-exchange-alt', Emprunt::class);
 
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted('ROLE_RESPONSABLE')) {
             yield MenuItem::section('Catalogue');
             yield MenuItem::linkToCrud('Livres', 'fas fa-book', Livre::class);
             yield MenuItem::linkToCrud('Auteurs', 'fas fa-user-tie', Auteur::class);

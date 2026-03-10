@@ -43,6 +43,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
+    #[ORM\Column]
+    private bool $enabled = true;
+
     /**
      * @var Collection<int, Reservations>
      */
@@ -60,6 +63,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservations = new ArrayCollection();
         $this->emprunts = new ArrayCollection();
         $this->dateAdhesion = new \DateTime();
+        $this->enabled = true;
     }
 
     /**
@@ -298,11 +302,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
     public function __toString(): string
     {
         return $this->prenom . ' ' . $this->nom;
     }
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
 
-    
+    public function setEnabled(bool $enabled): static
+    {
+        $this->enabled = $enabled;
+        return $this;
+    }
 }

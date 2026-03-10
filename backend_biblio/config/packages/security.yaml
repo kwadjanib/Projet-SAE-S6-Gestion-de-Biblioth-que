@@ -41,14 +41,14 @@ security:
 
     # Note: Only the *first* matching rule is applied
     role_hierarchy:
-        # Un bibliothécaire a les droits d'un adhérent
+        # Un bibliothécaire peut accéder au front-office comme un internaute
         ROLE_BIBLIOTHECAIRE: ROLE_ADHERENT
-        # Un responsable a tous les droits
-        ROLE_RESPONABLE:     [ROLE_BIBLIOTHECAIRE, ROLE_ADMIN]
+        # Un responsable peut accéder au front-office comme un internaute et hérite de toutes les fonctionnalités du bibliothécaire
+        ROLE_RESPONSABLE: ROLE_BIBLIOTHECAIRE
 
     access_control:
         # Seuls le personnel (Bibliothécaires et Responsables) accède à l'admin
-        - { path: ^/admin, roles: [ROLE_BIBLIOTHECAIRE, ROLE_RESPONABLE] }
+        - { path: ^/admin, roles: [ROLE_BIBLIOTHECAIRE, ROLE_RESPONSABLE] }
 
 when@test:
     security:
