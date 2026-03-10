@@ -1,0 +1,47 @@
+<div class="container mt-4">
+
+  <h2>Liste des livres</h2>
+
+  <table class="table table-striped">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titre</th>
+        <th>Langue</th>
+        <th>Date sortie</th>
+        <th>Disponibilité</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      @for (livre of livres(); track livre.id) {
+
+        <tr>
+
+          <td>{{ livre.id }}</td>
+
+          <td>{{ livre.titre }}</td>
+
+          <td>{{ livre.langue }}</td>
+
+          <td>{{ livre.dateSortie | date:'dd/MM/yyyy' }}</td>
+
+          <td>
+            @if (livre.disponible) {
+              <span class="badge bg-success">Disponible</span>
+            } @else {
+              <span class="badge bg-danger">Indisponible</span>
+            }
+          </td>
+
+        </tr>
+
+      }
+
+    </tbody>
+
+  </table>
+
+</div>
