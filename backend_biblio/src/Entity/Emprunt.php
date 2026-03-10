@@ -16,11 +16,11 @@ class Emprunt
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['emprunt:read', 'adherent:read'])]
+    #[Groups(['emprunt:read', 'utilisateur:read'])]
     private ?\DateTime $dateEmprunt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['emprunt:read', 'adherent:read'])]
+    #[Groups(['emprunt:read', 'utilisateur:read'])]
     private ?\DateTime $dateRetour = null;
 
     #[ORM\ManyToOne(inversedBy: 'emprunts')]

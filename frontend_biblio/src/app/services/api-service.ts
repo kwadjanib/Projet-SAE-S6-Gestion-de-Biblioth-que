@@ -32,26 +32,27 @@ export class ApiService {
   }
 
   getProfil() {
-    return this.http.get<Adherent>(`${this.API_URL}/adherent/profil`);
+    console.log(`${this.API_URL}/user/me`);
+    return this.http.get<Adherent>(`${this.API_URL}/user/me`);
   }
 
   updateProfil(data: { email?: string; numTel?: string; adressePostale?: string }) {
-    return this.http.put<Adherent>(`${this.API_URL}/adherent/profil`, data);
+    return this.http.put<Adherent>(`${this.API_URL}/user/me`, data);
   }
 
   getMesEmprunts() {
-    return this.http.get<Emprunt[]>(`${this.API_URL}/adherent/emprunts`);
+    return this.http.get<Emprunt[]>(`${this.API_URL}/emprunts`);
   }
 
   getMesReservations() {
-    return this.http.get<Reservation[]>(`${this.API_URL}/adherent/reservations`);
+    return this.http.get<Reservation[]>(`${this.API_URL}/reservations`);
   }
 
   reserverLivre(livreId: number) {
-    return this.http.post<Reservation>(`${this.API_URL}/reservations`, { livreId });
+    return this.http.post<Reservation>(`${this.API_URL}/reservation`, { livreId });
   }
 
   annulerReservation(reservationId: number) {
-    return this.http.delete<void>(`${this.API_URL}/reservations/${reservationId}`);
+    return this.http.delete<void>(`${this.API_URL}/reservation/${reservationId}`);
   }
 }

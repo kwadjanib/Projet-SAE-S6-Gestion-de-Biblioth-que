@@ -40,19 +40,22 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
-    this.isLoggedIn.set(false);
-    this.userEmail.set('');
-    this.userRoles.set([]);
-    this.router.navigate(['/']);
+    this.clearSession(true);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) {
+      return null;
+    }
+    if (this.isTokenExpired(token)) {
+      this.clearSession(false);
+      return null;
+    }
+    return token;
   }
 
-  isAdmin(): boolean {
+  isAdherent(): boolean {
     return this.userRoles().includes('ROLE_ADHERENT');
   }
 
@@ -71,6 +74,17 @@ export class AuthService {
     });
   }
 
+  private clearSession(navigate: boolean) {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.isLoggedIn.set(false);
+    this.userEmail.set('');
+    this.userRoles.set([]);
+    if (navigate) {
+      this.router.navigate(['/']);
+    }
+  }
+
   private getUserFromStorage(): { email: string; roles?: string[] } | null {
     const raw = localStorage.getItem(this.userKey);
     if (!raw) {
@@ -78,6 +92,29 @@ export class AuthService {
     }
     try {
       return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const payload = this.decodeTokenPayload(token);
+    if (!payload || typeof payload.exp !== 'number') {
+      return true;
+    }
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp <= now;
+  }
+
+  private decodeTokenPayload(token: string): { exp?: number } | null {
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return null;
+    }
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+    try {
+      return JSON.parse(atob(padded));
     } catch {
       return null;
     }

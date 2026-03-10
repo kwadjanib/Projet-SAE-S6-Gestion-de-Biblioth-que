@@ -15,7 +15,16 @@ class LivreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Livre::class);
     }
+    // src/Repository/LivreRepository.php
 
+    public function findByTitle(string $query): array
+    {
+    return $this->createQueryBuilder('l')
+        ->where('l.titre LIKE :query')
+        ->setParameter('query', '%' . $query . '%')
+        ->getQuery()
+        ->getResult();
+    }
     //    /**
     //     * @return Livre[] Returns an array of Livre objects
     //     */

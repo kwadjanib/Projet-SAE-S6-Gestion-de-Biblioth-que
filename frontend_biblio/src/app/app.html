@@ -19,6 +19,7 @@
         @if (auth.isLoggedIn()) {
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">
+              {{ auth.userEmail() || 'Mon compte' }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" routerLink="/mon-profil">Profil</a></li>

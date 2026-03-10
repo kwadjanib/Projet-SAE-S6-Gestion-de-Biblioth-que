@@ -13,6 +13,21 @@ use App\Entity\Livre;
 #[Route('/api')]
 class LivreController extends AbstractController
 {
+    #[Route('/livres/recherche', name: 'app_api_livre_search', methods: ['GET'])]
+    public function search(Request $request, LivreRepository $livreRepository): JsonResponse
+    {
+    // On récupère 'q' depuis l'URL : /api/livres/recherche?q=...
+    $query = $request->query->get('q', '');
+
+    if (empty($query)) {
+        // Optionnel : retourner tous les livres ou une liste vide
+        return $this->json($livreRepository->findAll(), 200, [], ['groups' => 'livre:read']);
+    }
+
+    $livres = $livreRepository->findByTitle($query);
+
+    return $this->json($livres, 200, [], ['groups' => 'livre:read']);
+    }
     #[Route('/livres', name: 'app_api_livre_index', methods: ['GET'])]
     public function index(LivreRepository $livreRepository): JsonResponse
     {
@@ -25,6 +40,5 @@ class LivreController extends AbstractController
     {
         return $this->json($livre, 200, [], ['groups' => 'livre:read']);
     }
-
 
 }
