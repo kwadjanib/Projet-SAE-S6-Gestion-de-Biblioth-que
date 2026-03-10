@@ -33,7 +33,7 @@ class ReservationController extends AbstractController
         $reservation = new Reservations();
         $reservation->setDateResa(new \DateTime());
         $reservation->setLivre($data['livre']);
-        $reservation->setAdherent($data['adherent']);
+        $reservation->setUtilisateur($data['utilisateur']);
         $entityManager->persist($reservation);
         $entityManager->flush();
 

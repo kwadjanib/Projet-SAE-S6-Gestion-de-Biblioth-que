@@ -35,7 +35,7 @@ class EmpruntController extends AbstractController
         $emprunt->setDateEmprunt(new \DateTime());
         $emprunt->setDateRetour(null);
         $emprunt->setLivre($data['livre']);
-        $emprunt->setAdherent($data['adherent']);
+        $emprunt->setUtilisateur($data['utilisateur']);
         $entityManager->persist($emprunt);
         $entityManager->flush();
 
