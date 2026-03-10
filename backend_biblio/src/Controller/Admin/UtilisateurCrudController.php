@@ -8,6 +8,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField; 
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;  
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField; 
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UtilisateurCrudController extends AbstractCrudController
@@ -28,14 +31,23 @@ class UtilisateurCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id')->hideOnForm(),
-            TextField::new('email'),
             TextField::new('nom'),
-            TextField::new('prenom', 'Prénom'),
+            TextField::new('prenom'),
+            EmailField::new('email'),
             TextField::new('password', 'Mot de passe')->onlyOnForms(),
+            DateField::new('dateNaiss', 'Date de naissance'),
+            DateField::new('dateAdhesion', 'Date d\'adhésion')->hideOnForm(),
+            TextField::new('adressePostale', 'Adresse'),
+            TextField::new('numTel', 'Téléphone'),
+            ImageField::new('photo')
+                ->setBasePath('uploads/adherents')
+                ->setUploadDir('public/uploads/adherents')
+                ->setRequired(false),
             ChoiceField::new('roles')
                 ->setChoices([
-                    'Responsable_Biblio' => 'ROLE_ADMIN',
-                    'Bibliothécaire' => 'ROLE_USER',
+                    'Responsable_Biblio' => 'ROLE_RESPONABLE',
+                    'Bibliothécaire' => 'ROLE_BIBLIOTHECAIRE',
+                    'Adhérent' => 'ROLE_ADHERENT'
                 ])
                 ->allowMultipleChoices()
                 ->renderExpanded(),

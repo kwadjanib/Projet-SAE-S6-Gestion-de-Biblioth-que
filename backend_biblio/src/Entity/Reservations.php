@@ -19,7 +19,7 @@ class Reservations
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Adherent $adherent = null;
+    private ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,14 +42,14 @@ class Reservations
         return $this;
     }
 
-    public function getAdherent(): ?Adherent
+    public function getUtilisateur(): ?Utilisateur
     {
-        return $this->adherent;
+        return $this->utilisateur;
     }
 
-    public function setAdherent(?Adherent $adherent): static
+    public function setUtilisateur(?Utilisateur $utilisateur): static
     {
-        $this->adherent = $adherent;
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }

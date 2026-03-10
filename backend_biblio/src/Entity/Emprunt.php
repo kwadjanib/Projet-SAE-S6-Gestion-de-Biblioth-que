@@ -25,8 +25,7 @@ class Emprunt
 
     #[ORM\ManyToOne(inversedBy: 'emprunts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['emprunt:read'])]
-    private ?Adherent $adherent = null;
+    private ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne(targetEntity: Livre::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -78,14 +77,14 @@ class Emprunt
         return $this;
     }
 
-    public function getAdherent(): ?Adherent
+    public function getUtilisateur(): ?utilisateur
     {
-        return $this->adherent;
+        return $this->utilisateur;
     }
 
-    public function setAdherent(?Adherent $adherent): static
+    public function setUtilisateur(?Utilisateur $utilisateur): static
     {
-        $this->adherent = $adherent;
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }
