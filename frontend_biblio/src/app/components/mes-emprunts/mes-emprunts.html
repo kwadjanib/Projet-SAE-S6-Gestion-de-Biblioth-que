@@ -1,0 +1,43 @@
+<div class="container mt-4">
+  <h2>Mes emprunts</h2>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  } @else if (erreur()) {
+    <div class="alert alert-danger">{{ erreur() }}</div>
+  } @else if (emprunts().length === 0) {
+    <div class="alert alert-info">Vous n'avez aucun emprunt en cours.</div>
+  } @else {
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Livre</th>
+          <th>Date d'emprunt</th>
+          <th>Date de retour prévue</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (emprunt of emprunts(); track emprunt.id) {
+          <tr [class.table-danger]="emprunt.enRetard">
+            <td>{{ emprunt.livre.titre }}</td>
+            <td>{{ emprunt.dateEmprunt | date:'dd/MM/yyyy' }}</td>
+            <td>{{ emprunt.dateRetour | date:'dd/MM/yyyy' }}</td>
+            <td>
+              @if (emprunt.enRetard) {
+                <span class="badge bg-danger">En retard</span>
+              } @else {
+                <span class="badge bg-success">En cours</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  }
+
+</div>

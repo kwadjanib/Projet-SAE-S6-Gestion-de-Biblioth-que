@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Mes réservations</h2>
+    <span class="badge bg-secondary fs-6">{{ reservations().length }} / 3</span>
+  </div>
+
+  @if (messageAnnulation()) {
+    <div class="alert alert-info alert-dismissible">
+      {{ messageAnnulation() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  } @else if (erreur()) {
+    <div class="alert alert-danger">{{ erreur() }}</div>
+  } @else if (reservations().length === 0) {
+    <div class="alert alert-info">Vous n'avez aucune réservation en cours.</div>
+  } @else {
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Livre</th>
+          <th>Date de réservation</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (resa of reservations(); track resa.id) {
+          <tr>
+            <td>{{ resa.livre.titre }}</td>
+            <td>{{ resa.dateResa | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                [disabled]="annulationEnCours() === resa.id"
+                (click)="annuler(resa.id)">
+                @if (annulationEnCours() === resa.id) {
+                  <span class="spinner-border spinner-border-sm"></span>
+                } @else {
+                  Annuler
+                }
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  }
+
+</div>
