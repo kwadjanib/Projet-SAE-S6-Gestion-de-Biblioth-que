@@ -1,41 +1,30 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
+  imports: [FormsModule],
+  templateUrl: './login.html'
 })
 export class Login {
-
-  private auth = inject(AuthService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   email = '';
   password = '';
-  loading = signal(false);
-  erreur = signal('');
+  errorMessage = '';
 
-  connexion() {
-    if (!this.email || !this.password) {
-      this.erreur.set('Veuillez remplir tous les champs.');
-      return;
-    }
-
-    this.loading.set(true);
-    this.erreur.set('');
-
-    this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
-        this.loading.set(false);
+  onSubmit() {
+    this.errorMessage = '';
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        this.authService.handleLoginSuccess(response.token);
         this.router.navigate(['/']);
       },
       error: () => {
-        this.loading.set(false);
-        this.erreur.set('Email ou mot de passe incorrect.');
+        this.errorMessage = 'Email ou mot de passe incorrect.';
       }
     });
   }

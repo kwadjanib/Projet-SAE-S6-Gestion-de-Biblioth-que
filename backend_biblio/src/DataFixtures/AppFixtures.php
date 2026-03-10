@@ -28,7 +28,7 @@ class AppFixtures extends Fixture
         $admin->setEmail('admin@biblio.fr')
             ->setNom('ADMIN')
             ->setPrenom('Principal')
-            ->setRoles(['ROLE_ADMIN', 'ROLE_RESPONSABLE'])
+            ->setRoles(['ROLE_BIBLIOTHECAIRE', 'ROLE_RESPONABLE','ROLE_ADHERENT'])
             ->setDateAdhesion(new \DateTime('-1 year'))
             ->setDateNaiss(new \DateTime('1990-01-01'))
             ->setAdressePostale('10 rue de l\'Administration, 31000 Toulouse')

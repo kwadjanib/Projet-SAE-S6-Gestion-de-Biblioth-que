@@ -1,58 +1,85 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { Adherent, AuthResponse, LoginDto } from '../models/adherent';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
-
   private http = inject(HttpClient);
   private router = inject(Router);
+  private apiUrl = 'https://127.0.0.1:8008/api';
+  private readonly tokenKey = 'jwt_token';
+  private readonly userKey = 'user';
 
-  private API_URL = 'https://127.0.0.1:8008/api';
+  isLoggedIn = signal(false);
+  userEmail = signal('');
+  userRoles = signal<string[]>([]);
 
-  private _token = signal<string | null>(localStorage.getItem('jwt_token'));
-  private _user = signal<Adherent | null>(this.chargerUserStorage());
-
-  readonly token = this._token.asReadonly();
-  readonly user = this._user.asReadonly();
-  readonly estConnecte = computed(() => !!this._token());
-
-  private chargerUserStorage(): Adherent | null {
-    const raw = localStorage.getItem('user');
-    if (!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
+  constructor() {
+    const token = this.getToken();
+    if (token) {
+      this.isLoggedIn.set(true);
+      const cachedUser = this.getUserFromStorage();
+      if (cachedUser) {
+        this.userEmail.set(cachedUser.email);
+        this.userRoles.set(cachedUser.roles ?? []);
+      }
+      this.loadUserInfo();
+    }
   }
 
-  login(credentials: LoginDto) {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login_check`, credentials).pipe(
-      tap(res => {
+  login(email: string, password: string) {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login_check`, { email, password });
+  }
 
-        localStorage.setItem('jwt_token', res.token);
-        this._token.set(res.token);
-        this.http.get<Adherent>(`${this.API_URL}/adherent/profil`).subscribe(user => {
-          localStorage.setItem('user', JSON.stringify(user));
-          this._user.set(user);
-        });
-      })
-    );
+  handleLoginSuccess(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+    this.isLoggedIn.set(true);
+    this.loadUserInfo();
   }
 
   logout() {
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('user');
-    this._token.set(null);
-    this._user.set(null);
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.isLoggedIn.set(false);
+    this.userEmail.set('');
+    this.userRoles.set([]);
     this.router.navigate(['/']);
   }
 
   getToken(): string | null {
-    return this._token();
+    return localStorage.getItem(this.tokenKey);
   }
 
-  mettreAJourUser(user: Adherent) {
-    localStorage.setItem('user', JSON.stringify(user));
-    this._user.set(user);
+  isAdmin(): boolean {
+    return this.userRoles().includes('ROLE_ADHERENT');
+  }
+
+  private loadUserInfo() {
+    this.http.get<any>(`${this.apiUrl}/user/me`).subscribe({
+      next: (user) => {
+        this.userEmail.set(user.email);
+        this.userRoles.set(user.roles);
+        localStorage.setItem(this.userKey, JSON.stringify(user));
+      },
+      error: (err) => {
+        if (err?.status === 401 || err?.status === 403) {
+          this.logout();
+        }
+      }
+    });
+  }
+
+  private getUserFromStorage(): { email: string; roles?: string[] } | null {
+    const raw = localStorage.getItem(this.userKey);
+    if (!raw) {
+      return null;
+    }
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
   }
 }

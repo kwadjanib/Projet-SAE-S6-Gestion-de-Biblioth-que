@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Emprunt;
 use App\Repository\EmpruntRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api')]
 class EmpruntController extends AbstractController
@@ -25,7 +26,7 @@ class EmpruntController extends AbstractController
     {
         return $this->json($emprunt, 200, [], ['groups' => 'emprunt:read']);
     }
-
+    #[IsGranted('ROLE_ADHERENT')]
     #[Route('/emprunt', name: 'app_api_emprunt_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {

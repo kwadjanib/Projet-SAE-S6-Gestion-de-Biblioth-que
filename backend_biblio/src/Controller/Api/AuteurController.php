@@ -24,15 +24,5 @@ class AuteurController extends AbstractController
     {
         return $this->json($auteur, 200, [], ['groups' => 'auteur:read']);
     }
-    #[Route('/auteur', name: 'app_api_auteur_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
-        $auteur = new Auteur();
-        $auteur->setNom($data['nom']);
-        $auteur->setPrenom($data['prenom']);
-        $entityManager->persist($auteur);
-        $entityManager->flush();
-        return $this->json($auteur, 201, [], ['groups' => 'auteur:read']);
-    }
+
 }

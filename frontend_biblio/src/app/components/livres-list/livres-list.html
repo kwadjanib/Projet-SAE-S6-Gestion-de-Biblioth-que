@@ -11,9 +11,7 @@
         <th>Langue</th>
         <th>Date sortie</th>
         <th>Disponibilité</th>
-        @if (auth.estConnecte()) {
-          <th>Action</th>
-        }
+
       </tr>
     </thead>
 
@@ -39,7 +37,7 @@
             }
           </td>
 
-          @if (auth.estConnecte()) {
+          @if (auth.isLoggedIn()) {
             <td>
               <button
                 class="btn btn-sm btn-outline-primary"

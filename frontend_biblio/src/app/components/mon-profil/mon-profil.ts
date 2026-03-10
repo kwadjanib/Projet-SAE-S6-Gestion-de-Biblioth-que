@@ -53,7 +53,6 @@ export class MonProfil implements OnInit {
     }).subscribe({
       next: (data) => {
         this.profil.set(data);
-        this.authService.mettreAJourUser(data);
         this.saving.set(false);
         this.succes.set('Profil mis à jour avec succès !');
       },

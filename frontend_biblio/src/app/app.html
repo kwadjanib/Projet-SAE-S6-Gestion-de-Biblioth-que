@@ -16,10 +16,9 @@
 
       <ul class="navbar-nav ms-auto">
 
-        @if (auth.estConnecte()) {
+        @if (auth.isLoggedIn()) {
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button">
-               {{ auth.user()?.prenom }} {{ auth.user()?.nom }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" routerLink="/mon-profil">Profil</a></li>
