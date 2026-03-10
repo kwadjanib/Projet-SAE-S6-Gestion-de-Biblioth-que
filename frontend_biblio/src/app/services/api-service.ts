@@ -10,7 +10,7 @@ export class ApiService {
 
   private http = inject(HttpClient);
 
-  private API_URL = 'http://localhost:8008/api';
+  private API_URL = 'http://127.0.0.1:8008/api';
 
   getLivres() {
     return this.http.get<Livre[]>(`${this.API_URL}/livres`);

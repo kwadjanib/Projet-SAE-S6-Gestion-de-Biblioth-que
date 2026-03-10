@@ -38,14 +38,10 @@ security:
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: ROLE_ADMIN }
+        - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api/emprunts, roles: ROLE_ADHERENT }
-        - { path: ^/api/emprunt, roles: ROLE_ADHERENT }
-        - { path: ^/api/reservations, roles: ROLE_ADHERENT }
-        - { path: ^/api/reservation, roles: ROLE_ADHERENT }
+        - { path: ^/api/emprunts, roles: PUBLIC_ACCESS }
+        - { path: ^/api/reservations, roles: PUBLIC_ACCESS }
 
 
 
