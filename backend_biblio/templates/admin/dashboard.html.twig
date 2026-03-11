@@ -1,73 +1,116 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block page_title %}Tableau de bord - Bibliothèque{% endblock %}
+{% block page_title %}Tableau de bord - Bibliothèque
+{% endblock %}
 
 {% block content_header %}
-    <h1 class="title">
-        <i class="fas fa-tachometer-alt"></i> Tableau de bord
-    </h1>
+	<h1 class="title">
+		<i class="fas fa-tachometer-alt"></i>
+		Tableau de bord
+	</h1>
 {% endblock %}
 
 {% block main %}
-    <div class="row">
-        {# Carte Livres #}
-        <div class="col-lg-3 col-md-6">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-book fa-3x mb-2"></i>
-                    <h2>{{ nbLivres }}</h2>
-                    <p class="card-text">Livres au catalogue</p>
-                </div>
-            </div>
-        </div>
+	{# 1. Les indicateurs rapides (Cartes de couleur) #}
+	<div class="row">
+		<div class="col-lg-3 col-md-6">
+			<div class="card text-white bg-primary mb-3 shadow-sm">
+				<div class="card-body text-center">
+					<i class="fas fa-book fa-3x mb-2"></i>
+					<h2 class="display-4">{{ nbLivres }}</h2>
+					<p class="card-text">Livres au catalogue</p>
+				</div>
+			</div>
+		</div>
 
-        {# Carte Adhérents #}
-        <div class="col-lg-3 col-md-6">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-2"></i>
-                    <h2>{{ nbAdherents }}</h2>
-                    <p class="card-text">Adhérents inscrits</p>
-                </div>
-            </div>
-        </div>
+		<div class="col-lg-3 col-md-6">
+			<div class="card text-white bg-success mb-3 shadow-sm">
+				<div class="card-body text-center">
+					<i class="fas fa-users fa-3x mb-2"></i>
+					<h2 class="display-4">{{ nbAdherents }}</h2>
+					<p class="card-text">Adhérents inscrits</p>
+				</div>
+			</div>
+		</div>
 
-        {# Carte Emprunts en cours #}
-        <div class="col-lg-3 col-md-6">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-exchange-alt fa-3x mb-2"></i>
-                    <h2>{{ nbEmpruntsEnCours }}</h2>
-                    <p class="card-text">Emprunts en cours</p>
-                </div>
-            </div>
-        </div>
+		<div class="col-lg-3 col-md-6">
+			<div class="card text-white bg-info mb-3 shadow-sm">
+				<div class="card-body text-center">
+					<i class="fas fa-exchange-alt fa-3x mb-2"></i>
+					<h2 class="display-4">{{ nbEmpruntsEnCours }}</h2>
+					<p class="card-text">Emprunts en cours</p>
+				</div>
+			</div>
+		</div>
 
-        {# Carte Retards #}
-        <div class="col-lg-3 col-md-6">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-clock fa-3x mb-2"></i>
-                    <h2>{{ nbEmpruntsEnRetard }}</h2>
-                    <p class="card-text">Retards détectés</p>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div class="col-lg-3 col-md-6">
+			<div class="card text-white bg-danger mb-3 shadow-sm">
+				<div class="card-body text-center">
+					<i class="fas fa-clock fa-3x mb-2"></i>
+					<h2 class="display-4">{{ nbEmpruntsEnRetard }}</h2>
+					<p class="card-text">Retards détectés</p>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-info-circle"></i> Gestion de la Bibliothèque
-                    </h5>
-                    <p class="card-text">
-                        Bienvenue sur votre espace d'administration.
-                        Vous pouvez gérer le catalogue, suivre les prêts et administrer les membres via le menu latéral.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row mt-4">
+		<div class="col-lg-6">
+			<div class="card shadow-sm">
+				<div class="card-header text-white py-3" style="background-color: #7772c6;">
+					<h5 class="mb-0">
+						<i class="fas fa-chart-line me-2"></i>
+						Top des thématiques empruntées (Finis)
+					</h5>
+				</div>
+				<div class="card-body">
+					<p class="text-muted small">Nombre d'emprunts terminés par catégorie de livre.</p>
+					<div class="list-group list-group-flush">
+						{% for stat in empruntsFinis %}
+							<div class="list-group-item d-flex justify-content-between align-items-center">
+								<span>
+									<i class="fas fa-tag text-secondary me-2"></i>
+									{{ stat.nom }}</span>
+								<span class="badge bg-primary rounded-pill fs-6">{{ stat.nb }}</span>
+							</div>
+						{% else %}
+							<div class="list-group-item text-center">Aucune donnée pour le moment.</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-6">
+			<div class="card shadow-sm h-100">
+				<div class="card-header bg-secondary text-white">
+					<h5 class="mb-0">
+						<i class="fas fa-info-circle me-2"></i>
+						Aide à la gestion</h5>
+				</div>
+				<div class="card-body">
+					<h6>Rappels importants :</h6>
+					<ul class="text-muted">
+						<li>Un emprunt est considéré
+							<strong>En retard</strong>
+							après 15 jours.</li>
+						<li>Un adhérent ne peut pas emprunter plus de
+							<strong>5 livres</strong>
+							à la fois.</li>
+						<li>Les réservations non transformées en emprunts expirent à
+							<strong>J+7</strong>.</li>
+					</ul>
+					<hr>
+					<p class="mb-0">Connecté en tant que :
+						<strong>{{ app.user.prenom }}
+							{{ app.user.nom }}</strong>
+					</p>
+					<span class="badge bg-light text-dark border">
+						{% if is_granted('ROLE_RESPONSABLE') %}Responsable{% else %}Bibliothécaire
+						{% endif %}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

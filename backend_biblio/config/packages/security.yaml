@@ -35,6 +35,22 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
+                # by default, the feature is enabled by checking a checkbox in the
+                # login form, uncomment the following line to always enable it.
+                #always_remember_me: true
+
+            # Activate different ways to authenticate:
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Note: Only the *first* matching rule is applied
+    role_hierarchy:
+        # Un bibliothécaire peut accéder au front-office comme un internaute
+        ROLE_BIBLIOTHECAIRE: ROLE_ADHERENT
+        # Un responsable peut accéder au front-office comme un internaute et hérite de toutes les fonctionnalités du bibliothécaire
+        ROLE_RESPONSABLE: ROLE_BIBLIOTHECAIRE
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }

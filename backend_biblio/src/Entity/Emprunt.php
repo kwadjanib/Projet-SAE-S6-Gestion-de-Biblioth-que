@@ -92,4 +92,16 @@ class Emprunt
     {
         return "Emprunt n°" . $this->id;
     }
+    public function estEnRetard(): bool
+    {
+        if ($this->dateRetour !== null) {
+            return false;
+        }
+        $dateLimite = (clone $this->dateEmprunt)->modify('+15 days');
+        return new \DateTime() > $dateLimite;
+    }
+    public function getStatut(): string
+    {
+        return $this->estEnRetard() ? 'EN RETARD' : 'À JOUR';
+    }
 }
