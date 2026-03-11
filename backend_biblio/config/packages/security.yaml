@@ -58,6 +58,8 @@ security:
         - { path: ^/admin, roles: [ROLE_BIBLIOTHECAIRE, ROLE_RESPONSABLE] }
         - { path: ^/api/user/me, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/emprunts, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/livres/recherche, roles: PUBLIC_ACCESS }
+
         - { path: ^/api/reservations, roles: IS_AUTHENTICATED_FULLY }
 
 

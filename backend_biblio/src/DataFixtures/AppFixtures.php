@@ -8,7 +8,6 @@ use App\Entity\Emprunt;
 use App\Entity\Livre;
 use App\Entity\Reservations;
 use App\Entity\Utilisateur;
-use App\Entity\Emprunt;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
