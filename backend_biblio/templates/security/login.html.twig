@@ -1,34 +1,204 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion
+{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+	<style>
+		.login-page {
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #ffffff;
+			padding: 2rem;
+		}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-        </div>
-    {% endif %}
+		.login-card {
+			display: grid;
+			grid-template-columns: minmax(300px, 1fr) minmax(380px, 1.2fr);
+			background: #ffffff;
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+			border: 1px solid #f0f0f0;
+			max-width: 900px;
+			width: 100%;
+		}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+		.login-aside {
+			padding: 3rem;
+			background: linear-gradient(140deg, #fff5e9 0%, #f3e5d5 100%);
+			color: #3b3027;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
-    </div>
+		.login-aside h1 {
+			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+			font-weight: 700;
+			margin-bottom: 1rem;
+		}
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+		.login-aside p {
+			margin: 0 0 1.5rem;
+			color: #5a4b3e;
+			line-height: 1.6;
+		}
+
+		.login-aside ul {
+			padding-left: 1.2rem;
+			margin: 0;
+			color: #5a4b3e;
+			line-height: 1.8;
+		}
+
+		.login-form-container {
+			padding: 3rem;
+			background: #ffffff;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.login-title {
+			font-weight: 800;
+			margin-bottom: 0.5rem;
+			color: #1a1a1a;
+		}
+
+		.login-subtitle {
+			color: #6b7280;
+			margin-bottom: 2rem;
+			font-size: 0.95rem;
+		}
+
+		/* Design des inputs amelioré */
+		.login-form-container .form-label {
+			font-weight: 600;
+			color: #374151;
+			margin-bottom: 0.5rem;
+			font-size: 0.9rem;
+		}
+
+		.login-form-container .form-control {
+			border-radius: 8px;
+			border: 1px solid #d1d5db;
+			padding: 0.75rem 1rem;
+			background-color: #f9fafb;
+			transition: all 0.2s ease-in-out;
+			color: #1f2937;
+		}
+
+		.login-form-container .form-control:focus {
+			background-color: #ffffff;
+			border-color: #6366f1;
+			box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+			outline: none;
+		}
+
+		.login-form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.form-field {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+			margin-bottom: 1rem;
+		}
+
+		.form-field .form-control {
+			width: 100%;
+		}
+
+		.login-actions {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-top: 1rem;
+		}
+
+		.form-check-label {
+			font-size: 0.9rem;
+			color: #4b5563;
+		}
+
+		.login-button {
+			width: 100%;
+			padding: 0.75rem 1rem;
+			font-weight: 600;
+			letter-spacing: 0.3px;
+			border-radius: 8px;
+			margin-top: 1.5rem;
+			transition: background-color 0.2s;
+		}
+
+		@media(max-width: 992px) {
+			.login-card {
+				grid-template-columns: 1fr;
+				max-width: 500px;
+			}
+			.login-aside {
+				order: 2;
+				padding: 2rem;
+			}
+			.login-form-container {
+				padding: 2rem;
+			}
+		}
+	</style>
+
+	<div class="login-page">
+		<div class="login-card">
+			<div class="login-aside">
+				<h1>Bibliotheque</h1>
+				<p>Accedez a l'espace de gestion de la bibliothèque.</p>
+			</div>
+
+			<div class="login-form-container">
+				{% if error %}
+					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{% endif %}
+
+				{% if app.user %}
+					<div class="alert alert-info">
+						Connecte en tant que
+						{{ app.user.userIdentifier }}.
+						<a href="{{ logout_path() }}" class="fw-bold text-decoration-none">Se deconnecter</a>
+					</div>
+				{% endif %}
+
+				<h2 class="login-title">Connexion</h2>
+				<p class="login-subtitle">Entrez vos identifiants pour continuer.</p>
+
+				<form method="post" class="login-form">
+					<div class="form-field">
+						<label class="form-label" for="inputEmail">Email</label>
+						<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" placeholder="nom@exemple.fr" required autofocus>
+					</div>
+
+					<div class="form-field">
+						<label class="form-label" for="inputPassword">Mot de passe</label>
+						<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" placeholder="Votre mot de passe" required>
+					</div>
+
+					<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+					<div class="login-actions">
+						<label class="form-check d-flex align-items-center gap-2 m-0">
+							<input type="checkbox" class="form-check-input mt-0" name="_remember_me">
+							<span class="form-check-label">Rester connecte</span>
+						</label>
+					</div>
+
+					<button class="btn btn-primary login-button" type="submit">
+						Se connecter
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
 {% endblock %}

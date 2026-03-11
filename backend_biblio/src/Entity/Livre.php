@@ -177,5 +177,11 @@ class Livre
 
         return $this;
     }
+
+    #[Groups(['livre:read'])]
+    public function isDisponible(): bool
+    {
+        return $this->emprunt === null;
+    }
     public function __toString(): string { return $this->titre; }
 }

@@ -56,16 +56,22 @@ class AppFixtures extends Fixture
             'saint_exupery' => ['Saint-Exupery', 'Antoine', '1900-06-29', '1944-07-31', 'Francaise'],
         ];
 
-        foreach ($auteursData as $code => $data) {
-            $auteur = new Auteur();
-            $auteur->setNom($data[0])
-                ->setPrenom($data[1])
-                ->setDateNaissance(new \DateTimeImmutable($data[2]))
-                ->setDateDeces($data[3] ? new \DateTimeImmutable($data[3]) : null)
-                ->setNationalite($data[4]);
-            $manager->persist($auteur);
-            $auteurs[$code] = $auteur;
-        }
+    // --- AUTEURS ---
+    foreach ($auteursData as $code => $data) {
+        $auteur = new Auteur();
+        $auteur->setNom($data[0])
+            ->setPrenom($data[1])
+            ->setDateNaissance(new \DateTimeImmutable($data[2]))
+            ->setDateDeces($data[3] ? new \DateTimeImmutable($data[3]) : null)
+            ->setNationalite($data[4]);
+
+        // Ajout d'une photo de profil aléatoire (visage)
+        // On utilise l'index ou le nom pour varier l'image
+        $auteur->setPhoto("https://i.pravatar.cc/300?u=" . urlencode($data[0]));
+
+        $manager->persist($auteur);
+        $auteurs[$code] = $auteur;
+    }
 
         // --- LIVRES ---
         $livres = [];
@@ -152,11 +158,15 @@ class AppFixtures extends Fixture
             ],
         ];
 
+        // --- LIVRES ---
         foreach ($livresData as $data) {
             $livre = new Livre();
             $livre->setTitre($data['titre'])
                 ->setDateSortie(new \DateTime($data['dateSortie']))
                 ->setLangue($data['langue']);
+
+            // Ajout d'une image de couverture aléatoire liée aux livres
+            $livre->setPhotoCouverture("https://loremflickr.com/320/480/book,library?lock=" . rand(1, 1000));
 
             foreach ($data['auteurs'] as $auteurCode) {
                 $livre->addAuteur($auteurs[$auteurCode]);

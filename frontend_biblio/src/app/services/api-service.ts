@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Livre } from '../models/livre';
 import { Categorie } from '../models/categorie';
 import { Adherent, Emprunt, Reservation } from '../models/adherent';
+import { Auteur } from '../models/auteur';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class ApiService {
 
   getCategories() {
     return this.http.get<Categorie[]>(`${this.API_URL}/categories`);
+  }
+
+  getAuteur(id: number) {
+    return this.http.get<Auteur>(`${this.API_URL}/auteurs/${id}`);
   }
 
   getProfil() {

@@ -1,13 +1,16 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api-service';
 import { Livre } from '../../models/livre';
 import { Categorie } from '../../models/categorie';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule],
-  templateUrl: './home.html'
+  imports: [FormsModule, DatePipe, RouterLink],
+  templateUrl: './home.html',
+  styleUrl: './home.css'
 })
 export class Home implements OnInit {
 
@@ -45,6 +48,25 @@ export class Home implements OnInit {
       this.livres.set(data);
     });
 
+  }
+
+  getCouverture(livre: Livre) {
+    return livre.photoCouverture || '/images/book-placeholder.svg';
+  }
+
+  getAuteursLabel(livre: Livre) {
+    const auteurs = livre.auteurs ?? [];
+    if (!auteurs.length) return 'Auteur inconnu';
+    return auteurs
+      .map(a => this.formatAuteur(a))
+      .filter(Boolean)
+      .join(', ');
+  }
+
+  private formatAuteur(auteur: { prenom?: string | null; nom?: string | null }) {
+    const prenom = auteur.prenom?.trim();
+    const nom = auteur.nom?.trim();
+    return [prenom, nom].filter(Boolean).join(' ') || nom || '';
   }
 
 }

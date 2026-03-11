@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './components/home/home';
 import { LivresList } from './components/livres-list/livres-list';
+import { LivreDetail } from './components/livre-detail/livre-detail';
 import { Login } from './components/login/login';
 import { MonProfil } from './components/mon-profil/mon-profil';
 import { MesEmprunts } from './components/mes-emprunts/mes-emprunts';
@@ -15,8 +16,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'livres/:id',
+    component: LivreDetail
+  },
+
+  {
     path: 'livres',
-    component: LivresList
+    component: LivresList,
+    pathMatch: 'full'
   },
 
   {

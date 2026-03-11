@@ -1,20 +1,17 @@
-<div class="container mt-4">
+<div class="container mt-4 home-page">
   <h2>Recherche de livres</h2>
 
-  <form (ngSubmit)="rechercher()">
-    <div class="row">
+  <form (ngSubmit)="rechercher()" class="mb-3">
+    <div class="row g-3">
       <div class="col-md-4">
         <label class="form-label">Titre</label>
-
         <input type="text" class="form-control" [(ngModel)]="titre" name="titre" />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">Catégorie</label>
-
+        <label class="form-label">Categorie</label>
         <select class="form-select" [(ngModel)]="categorieId" name="categorie">
           <option value="">Toutes</option>
-
           @for (cat of categories(); track cat.id) {
             <option [value]="cat.nom">
               {{ cat.nom }}
@@ -29,24 +26,29 @@
     </div>
   </form>
 
-  <hr />
+  <div class="section-divider"></div>
 
-  <h3>Résultats</h3>
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <h3 class="m-0">Resultats</h3>
+    <a class="btn btn-outline-dark btn-sm" routerLink="/livres">Voir tout</a>
+  </div>
 
-  <div class="row">
+  <div class="book-grid">
     @for (livre of livres(); track livre.id) {
-      <div class="col-md-3 mb-3">
-        <div class="card bg-light mb-3">
-          <img [src]="livre.photoCouverture" class="card-img-top" />
-
-          <div class="card-body">
-            <h5 class="card-title">
-              {{ livre.titre }}
-            </h5>
-
-            <p>{{ livre.langue }}</p>
+      <div class="book-card">
+        <a class="book-card__link" [routerLink]="['/livres', livre.id]">
+          <div class="book-card__image">
+            <img [src]="getCouverture(livre)" [alt]="'Couverture ' + livre.titre" />
           </div>
-        </div>
+
+          <div class="book-card__body">
+            <h5 class="book-card__title">{{ livre.titre }}</h5>
+            <p class="book-card__meta">{{ getAuteursLabel(livre) }}</p>
+            <p class="book-card__meta">
+              {{ livre.langue }} - {{ livre.dateSortie | date:'yyyy' }}
+            </p>
+          </div>
+        </a>
       </div>
     }
   </div>

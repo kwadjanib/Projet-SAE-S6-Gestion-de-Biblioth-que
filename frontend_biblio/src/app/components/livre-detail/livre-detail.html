@@ -1,0 +1,95 @@
+<div class="container mt-4 detail-page">
+  @if (loading()) {
+    <div class="alert alert-info">Chargement...</div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (livre(); as livre) {
+    <div class="detail-hero">
+      <div class="detail-hero__cover">
+        <img [src]="getCouverture(livre)" [alt]="'Couverture ' + livre.titre" />
+      </div>
+      <div class="detail-hero__info">
+        <div class="detail-title-row">
+          <h2 class="detail-title">{{ livre.titre }}</h2>
+          <span class="badge text-bg-dark">{{ livre.langue }}</span>
+        </div>
+        <p class="detail-meta">
+          Sortie: {{ livre.dateSortie | date:'dd/MM/yyyy' }}
+        </p>
+
+        <div class="detail-chips">
+          @for (cat of livre.categories ?? []; track cat.id) {
+            <span class="chip">{{ cat.nom }}</span>
+          }
+        </div>
+
+        <div class="detail-authors">
+          <span class="detail-label">Auteur(s)</span>
+          <div class="detail-chips">
+            @for (aut of livre.auteurs ?? []; track aut.id) {
+              <span class="chip chip-ghost">{{ formatAuteur(aut) }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="detail-section">
+      <h3 class="section-title">Auteur</h3>
+
+      @if (auteur(); as auteur) {
+        <div class="author-card">
+          <img class="author-photo" [src]="getAuteurPhoto(auteur)" [alt]="'Auteur ' + formatAuteur(auteur)" />
+          <div class="author-info">
+            <h4 class="author-name">{{ formatAuteur(auteur) }}</h4>
+            <p class="author-meta">
+              @if (auteur.nationalite) {
+                <span>{{ auteur.nationalite }}</span>
+              }
+              @if (auteur.dateNaissance) {
+                <span>Naissance: {{ auteur.dateNaissance | date:'dd/MM/yyyy' }}</span>
+              }
+              @if (auteur.dateDeces) {
+                <span>Deces: {{ auteur.dateDeces | date:'dd/MM/yyyy' }}</span>
+              }
+            </p>
+            <p class="author-desc">
+              {{ auteur.description || 'Aucune description disponible pour cet auteur.' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="detail-section mt-4">
+          <h3 class="section-title">Autres livres de cet auteur</h3>
+          @if (autresLivres().length > 0) {
+            <div class="book-grid book-grid--compact">
+              @for (autre of autresLivres(); track autre.id) {
+                <div class="book-card book-card--compact">
+                  <a class="book-card__link" [routerLink]="['/livres', autre.id]">
+                    <div class="book-card__image">
+                      <img [src]="getCouverture(autre)" [alt]="'Couverture ' + autre.titre" />
+                    </div>
+                    <div class="book-card__body">
+                      <h5 class="book-card__title">{{ autre.titre }}</h5>
+                      <p class="book-card__meta">
+                        Sortie: {{ autre.dateSortie | date:'dd/MM/yyyy' }}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-muted">Aucun autre livre trouve pour cet auteur.</p>
+          }
+        </div>
+      } @else {
+        <p class="text-muted">Auteur non disponible pour ce livre.</p>
+      }
+    </section>
+  }
+</div>

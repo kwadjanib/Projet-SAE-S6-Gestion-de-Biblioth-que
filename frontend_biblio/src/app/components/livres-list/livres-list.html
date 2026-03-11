@@ -14,12 +14,12 @@
           <input class="form-control" [(ngModel)]="auteur" name="auteur" placeholder="Ex: Orwell">
         </div>
         <div class="col-md-4">
-          <label class="form-label">Catégorie</label>
+          <label class="form-label">Categorie</label>
           <input class="form-control" [(ngModel)]="categorie" name="categorie" placeholder="Ex: Roman">
         </div>
         <div class="col-md-4">
           <label class="form-label">Langue</label>
-          <input class="form-control" [(ngModel)]="langue" name="langue" placeholder="Ex: Français">
+          <input class="form-control" [(ngModel)]="langue" name="langue" placeholder="Ex: Francais">
         </div>
         <div class="col-md-4">
           <label class="form-label">Date min</label>
@@ -37,69 +37,61 @@
     </div>
   </div>
 
-  <table class="table table-striped">
+  @if (auth.isLoggedIn() && nbReservations() >= 3) {
+    <div class="alert alert-warning">
+      Limite atteinte: vous avez deja 3 reservations en cours.
+    </div>
+  }
 
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Titre</th>
-        <th>Langue</th>
-        <th>Date sortie</th>
-        <th>Disponibilité</th>
+  <div class="book-grid">
+    @for (livre of livres(); track livre.id) {
+      <div class="book-card">
+        <a class="book-card__link" [routerLink]="['/livres', livre.id]">
+          <div class="book-card__image">
+            <img [src]="getCouverture(livre)" [alt]="'Couverture ' + livre.titre" />
+          </div>
+          <div class="book-card__body">
+            <h5 class="book-card__title">{{ livre.titre }}</h5>
+            <p class="book-card__meta">{{ getAuteursLabel(livre) }}</p>
+            <p class="book-card__meta">
+              {{ livre.langue }} - {{ livre.dateSortie | date:'yyyy' }}
+            </p>
+          </div>
+        </a>
 
-      </tr>
-    </thead>
-
-    <tbody>
-
-      @for (livre of livres(); track livre.id) {
-
-        <tr>
-
-          <td>{{ livre.id }}</td>
-
-          <td>{{ livre.titre }}</td>
-
-          <td>{{ livre.langue }}</td>
-
-          <td>{{ livre.dateSortie | date:'dd/MM/yyyy' }}</td>
-
-          <td>
+        <div class="book-card__footer">
+          <div class="d-flex align-items-center gap-2">
             @if (livre.disponible) {
               <span class="badge bg-success">Disponible</span>
             } @else {
               <span class="badge bg-danger">Indisponible</span>
             }
-          </td>
+          </div>
 
           @if (auth.isLoggedIn()) {
-            <td>
+            <div class="d-flex flex-wrap align-items-center gap-2">
               <button
                 class="btn btn-sm btn-outline-primary"
-                [disabled]="reservationEnCours() === livre.id"
+                [disabled]="reservationEnCours() === livre.id || nbReservations() >= 3"
                 (click)="reserver(livre.id)">
                 @if (reservationEnCours() === livre.id) {
                   <span class="spinner-border spinner-border-sm me-1"></span>
-                  Réservation...
+                  Reservation...
                 } @else {
-                  Réserver
+                  Reserver
                 }
               </button>
-
-              @if (getMsg(livre.id)) {
-                <div class="alert alert-{{ getMsg(livre.id).type }} py-1 px-2 mt-1 mb-0 small">
-                  {{ getMsg(livre.id).texte }}
-                </div>
-              }
-            </td>
+            </div>
           }
 
-        </tr>
-
-      }
-
-    </tbody>
-
-  </table>
+          @if (getMsg(livre.id)) {
+            <div class="alert alert-{{ getMsg(livre.id).type }} py-1 px-2 mt-2 mb-0 small w-100">
+              {{ getMsg(livre.id).texte }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
 
 </div>

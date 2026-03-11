@@ -1,4 +1,5 @@
 import { Categorie } from "./categorie";
+import { Auteur } from "./auteur";
 
 export interface Livre {
   id: number;
@@ -8,5 +9,6 @@ export interface Livre {
   photoCouverture?: string;
 
   categories?: Categorie[];
+  auteurs?: Auteur[];
   disponible?: boolean;
 }

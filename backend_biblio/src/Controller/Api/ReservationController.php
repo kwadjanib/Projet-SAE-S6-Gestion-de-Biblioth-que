@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Livre;
 use App\Entity\Reservations;
 use App\Repository\LivreRepository;
 use App\Repository\ReservationsRepository;
@@ -20,7 +19,6 @@ class ReservationController extends AbstractController
     #[IsGranted('ROLE_ADHERENT')]
     public function index(ReservationsRepository $reservationsRepository): JsonResponse
     {
-        // On ne récupère que les réservations de l'utilisateur connecté
         $reservations = $reservationsRepository->findBy(['utilisateur' => $this->getUser()]);
         return $this->json($reservations, 200, [], ['groups' => 'reservation:read']);
     }
@@ -29,54 +27,74 @@ class ReservationController extends AbstractController
     #[IsGranted('ROLE_ADHERENT')]
     public function show(Reservations $reservation): JsonResponse
     {
-        // Vérification de sécurité : l'adhérent possède-t-il cette réservation ?
         if ($reservation->getUtilisateur() !== $this->getUser()) {
-            return $this->json(['error' => 'Accès refusé'], 403);
+            return $this->json(['message' => 'Acces refuse'], 403);
         }
+
         return $this->json($reservation, 200, [], ['groups' => 'reservation:read']);
     }
-#[Route('/reservation', name: 'app_api_reservation_create', methods: ['POST'])]
-#[IsGranted('ROLE_ADHERENT')]
-public function create(
-    Request $request,
-    EntityManagerInterface $entityManager,
-    LivreRepository $livreRepository
-): JsonResponse {
-    $data = json_decode($request->getContent(), true);
 
-    // On récupère 'livreId' (correspondant au TypeScript)
-    $idDuLivre = $data['livreId'] ?? null;
+    #[Route('/reservation', name: 'app_api_reservation_create', methods: ['POST'])]
+    #[IsGranted('ROLE_ADHERENT')]
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LivreRepository $livreRepository,
+        ReservationsRepository $reservationsRepository
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
 
-    if (!$idDuLivre) {
-        return $this->json(['error' => 'ID du livre manquant'], 400);
+        $idDuLivre = $data['livreId'] ?? null;
+        if (!$idDuLivre) {
+            return $this->json(['message' => 'ID du livre manquant'], 400);
+        }
+
+        $livre = $livreRepository->find($idDuLivre);
+        if (!$livre) {
+            return $this->json(['message' => 'Livre non trouve'], 404);
+        }
+
+        $user = $this->getUser();
+
+        $reservationCount = $reservationsRepository->count(['utilisateur' => $user]);
+        if ($reservationCount >= 3) {
+            return $this->json(['message' => 'Limite de 3 reservations atteinte'], 409);
+        }
+
+        if ($livre->getEmprunt() !== null) {
+            return $this->json(['message' => 'Livre deja emprunte'], 409);
+        }
+
+        $existing = $reservationsRepository->findOneBy([
+            'utilisateur' => $user,
+            'livre' => $livre
+        ]);
+        if ($existing) {
+            return $this->json(['message' => 'Livre deja reserve'], 409);
+        }
+
+        $reservation = new Reservations();
+        $reservation->setDateResa(new \DateTime());
+        $reservation->setLivre($livre);
+        $reservation->setUtilisateur($user);
+
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+
+        return $this->json($reservation, 201, [], ['groups' => 'reservation:read']);
     }
 
-    $livre = $livreRepository->find($idDuLivre);
-
-    if (!$livre) {
-        return $this->json(['error' => 'Livre non trouvé'], 404);
-    }
-
-    $reservation = new Reservations();
-    $reservation->setDateResa(new \DateTime());
-    $reservation->setLivre($livre);
-    $reservation->setUtilisateur($this->getUser());
-
-    $entityManager->persist($reservation);
-    $entityManager->flush();
-
-    return $this->json($reservation, 201, [], ['groups' => 'reservation:read']);
-}   #[Route('/reservation/{id}', name: 'app_api_reservation_delete', methods: ['DELETE'])]
+    #[Route('/reservation/{id}', name: 'app_api_reservation_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADHERENT')]
     public function delete(Reservations $reservation, EntityManagerInterface $entityManager): JsonResponse
     {
         if ($reservation->getUtilisateur() !== $this->getUser()) {
-            return $this->json(['error' => 'Vous ne pouvez pas supprimer cette réservation'], 403);
+            return $this->json(['message' => 'Vous ne pouvez pas supprimer cette reservation'], 403);
         }
 
         $entityManager->remove($reservation);
         $entityManager->flush();
 
-        return $this->json(['message' => 'Réservation supprimée avec succès'], 200);
+        return $this->json(['message' => 'Reservation supprimee avec succes'], 200);
     }
 }

@@ -1,0 +1,11 @@
+.home-page h2 {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-weight: 700;
+}
+
+.section-divider {
+  height: 2px;
+  background: linear-gradient(90deg, rgba(150, 110, 70, 0.2), rgba(150, 110, 70, 0.6), rgba(150, 110, 70, 0.2));
+  border-radius: 999px;
+  margin: 1.5rem 0;
+}

@@ -18,9 +18,9 @@ export class LivresList implements OnInit {
   auth = inject(AuthService);
 
   livres = signal<Livre[]>([]);
-
   reservationEnCours = signal<number | null>(null);
   messages = signal<{ [livreId: number]: { texte: string; type: 'success' | 'danger' | 'warning' } }>({});
+  nbReservations = signal<number>(0);
 
   titre = '';
   auteur = '';
@@ -31,6 +31,7 @@ export class LivresList implements OnInit {
 
   ngOnInit() {
     this.chargerLivres();
+    this.chargerReservations();
   }
 
   rechercher() {
@@ -48,7 +49,6 @@ export class LivresList implements OnInit {
     if (this.langue.trim()) query.langue = this.langue.trim();
     if (this.dateMin) query.dateMin = this.dateMin;
     if (this.dateMax) query.dateMax = this.dateMax;
-    console.log('Requête de recherche :', query);
 
     this.apiService.rechercherLivres(query).subscribe(data => {
       this.livres.set(data);
@@ -71,6 +71,17 @@ export class LivresList implements OnInit {
     });
   }
 
+  private chargerReservations() {
+    if (!this.auth.isLoggedIn()) {
+      this.nbReservations.set(0);
+      return;
+    }
+    this.apiService.getMesReservations().subscribe({
+      next: (data) => this.nbReservations.set(data.length),
+      error: () => this.nbReservations.set(0)
+    });
+  }
+
   reserver(livreId: number) {
     this.reservationEnCours.set(livreId);
     this.messages.update(msgs => ({ ...msgs, [livreId]: undefined as any }));
@@ -78,9 +89,10 @@ export class LivresList implements OnInit {
     this.apiService.reserverLivre(livreId).subscribe({
       next: () => {
         this.reservationEnCours.set(null);
+        this.nbReservations.update(count => count + 1);
         this.messages.update(msgs => ({
           ...msgs,
-          [livreId]: { texte: 'Réservation effectuée avec succès !', type: 'success' }
+          [livreId]: { texte: 'Reservation effectuee avec succes !', type: 'success' }
         }));
       },
       error: (err) => {
@@ -99,25 +111,45 @@ export class LivresList implements OnInit {
     const detail = err.error?.message ?? err.error?.detail ?? '';
 
     if (status === 409) {
-      if (detail.toLowerCase().includes('déjà réservé') || detail.toLowerCase().includes('already reserved')) {
-        return 'Ce livre est déjà réservé par un autre adhérent.';
+      const lower = detail.toLowerCase();
+      if (lower.includes('deja reserve') || lower.includes('already reserved')) {
+        return 'Ce livre est deja reserve par un autre adherent.';
       }
-      if (detail.toLowerCase().includes('emprunté') || detail.toLowerCase().includes('borrowed')) {
-        return 'Ce livre est actuellement emprunté.';
+      if (lower.includes('emprunte') || lower.includes('borrowed')) {
+        return 'Ce livre est actuellement emprunte.';
       }
-      if (detail.toLowerCase().includes('limite') || detail.toLowerCase().includes('maximum')) {
-        return 'Vous avez atteint la limite de 3 réservations simultanées.';
+      if (lower.includes('limite') || lower.includes('maximum')) {
+        return 'Vous avez atteint la limite de 3 reservations simultanees.';
       }
-      return detail || 'Réservation impossible (conflit).';
+      return detail || 'Reservation impossible (conflit).';
     }
 
-    if (status === 401) return 'Vous devez être connecté pour réserver.';
-    if (status === 403) return 'Vous n\'êtes pas autorisé à effectuer cette action.';
+    if (status === 401) return 'Vous devez etre connecte pour reserver.';
+    if (status === 403) return 'Vous n\'etes pas autorise a effectuer cette action.';
 
-    return detail || 'Une erreur est survenue. Veuillez réessayer.';
+    return detail || 'Une erreur est survenue. Veuillez reessayer.';
   }
 
   getMsg(livreId: number) {
     return this.messages()[livreId];
+  }
+
+  getCouverture(livre: Livre) {
+    return livre.photoCouverture || '/images/book-placeholder.svg';
+  }
+
+  getAuteursLabel(livre: Livre) {
+    const auteurs = livre.auteurs ?? [];
+    if (!auteurs.length) return 'Auteur inconnu';
+    return auteurs
+      .map(a => this.formatAuteur(a))
+      .filter(Boolean)
+      .join(', ');
+  }
+
+  private formatAuteur(auteur: { prenom?: string | null; nom?: string | null }) {
+    const prenom = auteur.prenom?.trim();
+    const nom = auteur.nom?.trim();
+    return [prenom, nom].filter(Boolean).join(' ') || nom || '';
   }
 }

@@ -1,0 +1,13 @@
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7eadb"/>
+      <stop offset="0.55" stop-color="#f0ddc9"/>
+      <stop offset="1" stop-color="#e9d2ba"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg)"/>
+  <rect x="30" y="30" width="340" height="540" rx="18" fill="rgba(255,255,255,0.45)"/>
+  <text x="200" y="275" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="28" fill="#7a5a3a" letter-spacing="2">BIBLIO</text>
+  <text x="200" y="315" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#8d6b47" letter-spacing="3">COUVERTURE</text>
+</svg>
