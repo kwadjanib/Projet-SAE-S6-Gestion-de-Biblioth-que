@@ -2,6 +2,41 @@
 
   <h2>Liste des livres</h2>
 
+  <div class="card mb-3">
+    <div class="card-body">
+      <form class="row g-3" (ngSubmit)="rechercher()">
+        <div class="col-md-4">
+          <label class="form-label">Titre</label>
+          <input class="form-control" [(ngModel)]="titre" name="titre" placeholder="Ex: 1984">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Auteur</label>
+          <input class="form-control" [(ngModel)]="auteur" name="auteur" placeholder="Ex: Orwell">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Catégorie</label>
+          <input class="form-control" [(ngModel)]="categorie" name="categorie" placeholder="Ex: Roman">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Langue</label>
+          <input class="form-control" [(ngModel)]="langue" name="langue" placeholder="Ex: Français">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Date min</label>
+          <input type="date" class="form-control" [(ngModel)]="dateMin" name="dateMin">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Date max</label>
+          <input type="date" class="form-control" [(ngModel)]="dateMax" name="dateMax">
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Rechercher</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="reinitialiser()">Reinitialiser</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <table class="table table-striped">
 
     <thead>

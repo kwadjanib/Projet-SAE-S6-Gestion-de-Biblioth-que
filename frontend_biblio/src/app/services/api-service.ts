@@ -22,6 +22,7 @@ export class ApiService {
   }
 
   rechercherLivres(query: any) {
+    console.log('Requête de recherche :', query);
     return this.http.get<Livre[]>(`${this.API_URL}/livres/recherche`, {
       params: query
     });

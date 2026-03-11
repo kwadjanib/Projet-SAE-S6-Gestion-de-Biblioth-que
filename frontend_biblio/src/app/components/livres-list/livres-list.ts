@@ -1,13 +1,14 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api-service';
 import { AuthService } from '../../services/auth.service';
 import { Livre } from '../../models/livre';
 
 @Component({
   selector: 'app-livres-list',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, FormsModule],
   templateUrl: './livres-list.html',
   styleUrl: './livres-list.css'
 })
@@ -21,7 +22,50 @@ export class LivresList implements OnInit {
   reservationEnCours = signal<number | null>(null);
   messages = signal<{ [livreId: number]: { texte: string; type: 'success' | 'danger' | 'warning' } }>({});
 
+  titre = '';
+  auteur = '';
+  categorie = '';
+  langue = '';
+  dateMin = '';
+  dateMax = '';
+
   ngOnInit() {
+    this.chargerLivres();
+  }
+
+  rechercher() {
+    const query: {
+      titre?: string;
+      auteur?: string;
+      categorie?: string;
+      langue?: string;
+      dateMin?: string;
+      dateMax?: string;
+    } = {};
+    if (this.titre.trim()) query.titre = this.titre.trim();
+    if (this.auteur.trim()) query.auteur = this.auteur.trim();
+    if (this.categorie.trim()) query.categorie = this.categorie.trim();
+    if (this.langue.trim()) query.langue = this.langue.trim();
+    if (this.dateMin) query.dateMin = this.dateMin;
+    if (this.dateMax) query.dateMax = this.dateMax;
+    console.log('Requête de recherche :', query);
+
+    this.apiService.rechercherLivres(query).subscribe(data => {
+      this.livres.set(data);
+    });
+  }
+
+  reinitialiser() {
+    this.titre = '';
+    this.auteur = '';
+    this.categorie = '';
+    this.langue = '';
+    this.dateMin = '';
+    this.dateMax = '';
+    this.chargerLivres();
+  }
+
+  private chargerLivres() {
     this.apiService.getLivres().subscribe(data => {
       this.livres.set(data);
     });

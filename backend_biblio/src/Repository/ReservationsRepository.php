@@ -16,6 +16,16 @@ class ReservationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservations::class);
     }
 
+    public function searchByCategory(string $category): array
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.livre', 'l')
+            ->where('l.categorie = :category')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Reservations[] Returns an array of Reservations objects
     //     */

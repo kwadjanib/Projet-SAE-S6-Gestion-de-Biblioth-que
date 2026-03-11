@@ -42,7 +42,9 @@ class Livre
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     #[Groups(['livre:read'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Emprunt $emprunt = null;
+
 
     /**
      * @var Collection<int, Categorie>

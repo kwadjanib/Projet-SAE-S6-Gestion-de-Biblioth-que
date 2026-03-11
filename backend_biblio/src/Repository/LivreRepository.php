@@ -25,6 +25,53 @@ class LivreRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+
+    public function findByCriteria(
+        ?string $titre,
+        ?string $auteur,
+        ?string $categorie,
+        ?string $langue,
+        ?\DateTimeInterface $dateMin,
+        ?\DateTimeInterface $dateMax
+    ): array {
+        $qb = $this->createQueryBuilder('l')
+            ->leftJoin('l.auteurs', 'a')
+            ->leftJoin('l.categories', 'c')
+            ->addSelect('a', 'c')
+            ->distinct();
+
+        if ($titre) {
+            $qb->andWhere('LOWER(l.titre) LIKE :titre')
+                ->setParameter('titre', '%' . strtolower($titre) . '%');
+        }
+
+        if ($auteur) {
+            $qb->andWhere('LOWER(a.nom) LIKE :auteur OR LOWER(a.prenom) LIKE :auteur')
+                ->setParameter('auteur', '%' . strtolower($auteur) . '%');
+        }
+
+        if ($categorie) {
+            $qb->andWhere('LOWER(c.nom) LIKE :categorie')
+                ->setParameter('categorie', '%' . strtolower($categorie) . '%');
+        }
+
+        if ($langue) {
+            $qb->andWhere('LOWER(l.langue) LIKE :langue')
+                ->setParameter('langue', '%' . strtolower($langue) . '%');
+        }
+
+        if ($dateMin) {
+            $qb->andWhere('l.dateSortie >= :dateMin')
+                ->setParameter('dateMin', $dateMin);
+        }
+
+        if ($dateMax) {
+            $qb->andWhere('l.dateSortie <= :dateMax')
+                ->setParameter('dateMax', $dateMax);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return Livre[] Returns an array of Livre objects
     //     */

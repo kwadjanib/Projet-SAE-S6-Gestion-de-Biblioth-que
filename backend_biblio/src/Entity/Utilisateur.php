@@ -304,5 +304,5 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->prenom . ' ' . $this->nom;
     }
 
-    
+
 }
