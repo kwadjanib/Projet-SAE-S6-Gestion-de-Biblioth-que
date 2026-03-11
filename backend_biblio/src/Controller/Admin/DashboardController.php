@@ -31,6 +31,14 @@ class DashboardController extends AbstractDashboardController
          WHERE e.dateRetour IS NOT NULL 
          GROUP BY c.nom'
         )->getResult();
+        $empruntsFinisAuteurs = $this->em->createQuery(
+            'SELECT CONCAT(a.prenom, \' \', a.nom) as nom, COUNT(l.id) as nb 
+         FROM App\Entity\Emprunt e 
+         JOIN e.livre l 
+         JOIN l.auteurs a 
+         WHERE e.dateRetour IS NOT NULL 
+         GROUP BY a.id'
+        )->getResult();
         foreach ($empruntsEnCours as $emprunt) {
             if ($emprunt->estEnRetard()) {
                 $nbRetards++;
@@ -42,6 +50,7 @@ class DashboardController extends AbstractDashboardController
             'nbEmpruntsEnCours' => $this->em->getRepository(Emprunt::class)->count(['dateRetour' => null]),
             'nbEmpruntsEnRetard' => $nbRetards,
             'empruntsFinis' => $empruntsFinis,
+            'empruntsFinisAuteurs' => $empruntsFinisAuteurs,
         ]);
     }
 

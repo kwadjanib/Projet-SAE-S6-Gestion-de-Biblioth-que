@@ -1,7 +1,6 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block page_title %}Tableau de bord - Bibliothèque
-{% endblock %}
+{% block page_title %}Tableau de bord - Bibliotheque{% endblock %}
 
 {% block content_header %}
 	<h1 class="title">
@@ -11,7 +10,6 @@
 {% endblock %}
 
 {% block main %}
-	{# 1. Les indicateurs rapides (Cartes de couleur) #}
 	<div class="row">
 		<div class="col-lg-3 col-md-6">
 			<div class="card text-white bg-primary mb-3 shadow-sm">
@@ -28,7 +26,7 @@
 				<div class="card-body text-center">
 					<i class="fas fa-users fa-3x mb-2"></i>
 					<h2 class="display-4">{{ nbAdherents }}</h2>
-					<p class="card-text">Adhérents inscrits</p>
+					<p class="card-text">Adherents inscrits</p>
 				</div>
 			</div>
 		</div>
@@ -48,7 +46,7 @@
 				<div class="card-body text-center">
 					<i class="fas fa-clock fa-3x mb-2"></i>
 					<h2 class="display-4">{{ nbEmpruntsEnRetard }}</h2>
-					<p class="card-text">Retards détectés</p>
+					<p class="card-text">Retards detectes</p>
 				</div>
 			</div>
 		</div>
@@ -60,11 +58,11 @@
 				<div class="card-header text-white py-3" style="background-color: #7772c6;">
 					<h5 class="mb-0">
 						<i class="fas fa-chart-line me-2"></i>
-						Top des thématiques empruntées (Finis)
+						Top des thematiques empruntees (finis)
 					</h5>
 				</div>
 				<div class="card-body">
-					<p class="text-muted small">Nombre d'emprunts terminés par catégorie de livre.</p>
+					<p class="text-muted small">Nombre d'emprunts termines par categorie de livre.</p>
 					<div class="list-group list-group-flush">
 						{% for stat in empruntsFinis %}
 							<div class="list-group-item d-flex justify-content-between align-items-center">
@@ -74,7 +72,31 @@
 								<span class="badge bg-primary rounded-pill fs-6">{{ stat.nb }}</span>
 							</div>
 						{% else %}
-							<div class="list-group-item text-center">Aucune donnée pour le moment.</div>
+							<div class="list-group-item text-center">Aucune donnee pour le moment.</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+
+			<div class="card shadow-sm mt-4">
+				<div class="card-header text-white py-3" style="background-color: #4f6d7a;">
+					<h5 class="mb-0">
+						<i class="fas fa-user-pen me-2"></i>
+						Top des auteurs empruntes (finis)
+					</h5>
+				</div>
+				<div class="card-body">
+					<p class="text-muted small">Nombre d'emprunts termines par auteur.</p>
+					<div class="list-group list-group-flush">
+						{% for stat in empruntsFinisAuteurs %}
+							<div class="list-group-item d-flex justify-content-between align-items-center">
+								<span>
+									<i class="fas fa-feather text-secondary me-2"></i>
+									{{ stat.nom }}</span>
+								<span class="badge bg-secondary rounded-pill fs-6">{{ stat.nb }}</span>
+							</div>
+						{% else %}
+							<div class="list-group-item text-center">Aucune donnee pour le moment.</div>
 						{% endfor %}
 					</div>
 				</div>
@@ -86,28 +108,21 @@
 				<div class="card-header bg-secondary text-white">
 					<h5 class="mb-0">
 						<i class="fas fa-info-circle me-2"></i>
-						Aide à la gestion</h5>
+						Aide a la gestion</h5>
 				</div>
 				<div class="card-body">
 					<h6>Rappels importants :</h6>
 					<ul class="text-muted">
-						<li>Un emprunt est considéré
-							<strong>En retard</strong>
-							après 15 jours.</li>
-						<li>Un adhérent ne peut pas emprunter plus de
-							<strong>5 livres</strong>
-							à la fois.</li>
-						<li>Les réservations non transformées en emprunts expirent à
-							<strong>J+7</strong>.</li>
+						<li>Un emprunt est considere <strong>en retard</strong> apres 15 jours.</li>
+						<li>Un adherent ne peut pas emprunter plus de <strong>5 livres</strong> a la fois.</li>
+						<li>Les reservations non transformees en emprunts expirent a <strong>J+7</strong>.</li>
 					</ul>
 					<hr>
-					<p class="mb-0">Connecté en tant que :
-						<strong>{{ app.user.prenom }}
-							{{ app.user.nom }}</strong>
+					<p class="mb-0">Connecte en tant que :
+						<strong>{{ app.user.prenom }} {{ app.user.nom }}</strong>
 					</p>
 					<span class="badge bg-light text-dark border">
-						{% if is_granted('ROLE_RESPONSABLE') %}Responsable{% else %}Bibliothécaire
-						{% endif %}
+						{% if is_granted('ROLE_RESPONSABLE') %}Responsable{% else %}Bibliothecaire{% endif %}
 					</span>
 				</div>
 			</div>

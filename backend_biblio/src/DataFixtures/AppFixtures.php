@@ -6,7 +6,6 @@ use App\Entity\Auteur;
 use App\Entity\Categorie;
 use App\Entity\Livre;
 use App\Entity\Utilisateur;
-use App\Entity\Emprunt;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -22,86 +21,261 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $robert = new Utilisateur();
-        $robert->setEmail('robert@biblio.fr')->setPrenom('Robert')->setNom('RESPONSABLE')
-            ->setRoles(['ROLE_RESPONSABLE'])->setPassword($this->hasher->hashPassword($robert, 'password'))
-            ->setDateAdhesion(new \DateTime('-1 year'))->setDateNaiss(new \DateTime('1975-01-01'))
-            ->setAdressePostale('1 rue de la Gestion')->setNumTel('0102030405');
-        $manager->persist($robert);
-
-        $bruno = new Utilisateur();
-        $bruno->setEmail('bruno@biblio.fr')->setPrenom('Bruno')->setNom('BIBLIOTHECAIRE')
-            ->setRoles(['ROLE_BIBLIOTHECAIRE'])->setPassword($this->hasher->hashPassword($bruno, 'password'))
-            ->setDateAdhesion(new \DateTime('-6 months'))->setDateNaiss(new \DateTime('1985-03-12'))
-            ->setAdressePostale('5 ave des Livres')->setNumTel('0607080910');
-        $manager->persist($bruno);
-
-        $adherents = [];
-        $nomsAdherents = ['Alice', 'Anthony', 'André', 'Agathe', 'Arthur', 'Adèle', 'Alain', 'Amélie', 'Adrien', 'Aude'];
-        
-        foreach ($nomsAdherents as $prenom) {
-            $user = new Utilisateur();
-            $user->setEmail(strtolower($prenom) . '@adherent.fr')->setPrenom($prenom)->setNom('ADHERENT')
-                ->setRoles(['ROLE_ADHERENT'])->setPassword($this->hasher->hashPassword($user, 'password'))
-                ->setDateAdhesion(new \DateTime('-2 months'))->setDateNaiss(new \DateTime('2000-01-01'))
-                ->setAdressePostale('Rue des Lecteurs')->setNumTel('0701020304');
-            $manager->persist($user);
-            $adherents[] = $user;
-        }
-
+        // Categories
         $categories = [];
-        foreach (['Science-Fiction', 'Dystopie', 'Jeunesse', 'Essai', 'Informatique'] as $nomCat) {
-            $c = new Categorie(); $c->setNom($nomCat);
-            $manager->persist($c);
-            $categories[$nomCat] = $c;
-        }
-
-        $auteurs = [];
-        $dataAuteurs = [
-            ['Frank', 'Herbert'], ['Isaac', 'Asimov'], ['George', 'Orwell'], 
-            ['Antoine', 'de Saint-Exupéry'], ['Robert C.', 'Martin']
+        $categoriesData = [
+            'roman' => ['Roman', 'Fiction et grands classiques.'],
+            'science_fiction' => ['Science-fiction', 'Technologies, futur et voyages spatiaux.'],
+            'policier' => ['Policier', 'Enquetes et suspense.'],
+            'histoire' => ['Histoire', 'Recits historiques et biographies.'],
+            'philosophie' => ['Philosophie', 'Idees, essais et pensee critique.'],
+            'jeunesse' => ['Jeunesse', 'Lectures pour les plus jeunes.'],
+            'fantastique' => ['Fantastique', 'Imaginaire et surnaturel.'],
+            'aventure' => ['Aventure', 'Voyages et exploration.'],
+            'dystopie' => ['Dystopie', 'Societes oppressives et futurs sombres.'],
+            'informatique' => ['Informatique', 'Developpement et qualite logicielle.'],
         ];
-        foreach ($dataAuteurs as $a) {
-            $aut = new Auteur(); $aut->setPrenom($a[0])->setNom($a[1])
-                ->setDateNaissance(new \DateTimeImmutable('1950-01-01'));
-            $manager->persist($aut);
-            $auteurs[] = $aut;
+
+        foreach ($categoriesData as $code => [$nom, $description]) {
+            $categorie = new Categorie();
+            $categorie->setNom($nom)->setDescription($description);
+            $manager->persist($categorie);
+            $categories[$code] = $categorie;
         }
 
-        $livres = [];
-        for ($i = 1; $i <= 20; $i++) {
-            $l = new Livre();
-            $titre = match($i) {
-                1 => 'Dune', 2 => 'Fondation', 3 => '1984', 4 => 'Le Petit Prince', 5 => 'Clean Code',
-                default => "Livre Volume $i"
-            };
-            $l->setTitre($titre)->setLangue($i % 2 == 0 ? 'FR' : 'EN')->setDateSortie(new \DateTime('1950-01-01'))
-              ->addAuteur($auteurs[array_rand($auteurs)])
-              ->addCategory($categories[array_rand($categories)]);
-            $manager->persist($l);
-            $livres[] = $l;
+        // Auteurs
+        $auteurs = [];
+        $auteursData = [
+            'hugo' => ['Hugo', 'Victor', '1802-02-26', '1885-05-22', 'Francaise'],
+            'orwell' => ['Orwell', 'George', '1903-06-25', '1950-01-21', 'Britannique'],
+            'asimov' => ['Asimov', 'Isaac', '1920-01-02', '1992-04-06', 'Americaine'],
+            'verne' => ['Verne', 'Jules', '1828-02-08', '1905-03-24', 'Francaise'],
+            'christie' => ['Christie', 'Agatha', '1890-09-15', '1976-01-12', 'Britannique'],
+            'shelley' => ['Shelley', 'Mary', '1797-08-30', '1851-02-01', 'Britannique'],
+            'saint_exupery' => ['Saint-Exupery', 'Antoine', '1900-06-29', '1944-07-31', 'Francaise'],
+            'herbert' => ['Herbert', 'Frank', '1920-10-08', '1986-02-11', 'Americaine'],
+            'harari' => ['Harari', 'Yuval', '1976-02-24', null, 'Israelienne'],
+            'martin' => ['Martin', 'Robert', '1952-12-05', null, 'Americaine'],
+        ];
+
+        foreach ($auteursData as $code => $data) {
+            $auteur = new Auteur();
+            $auteur->setNom($data[0])
+                ->setPrenom($data[1])
+                ->setDateNaissance(new \DateTimeImmutable($data[2]))
+                ->setDateDeces($data[3] ? new \DateTimeImmutable($data[3]) : null)
+                ->setNationalite($data[4]);
+            $manager->persist($auteur);
+            $auteurs[$code] = $auteur;
         }
 
-        $e1 = new Emprunt();
-        $e1->setUtilisateur($adherents[1])->setLivre($livres[1]) // Anthony - Fondation
-           ->setDateEmprunt(new \DateTime('2025-03-04'))->setDateRetour(new \DateTime('2025-03-22'));
-        $manager->persist($e1);
+        // Livres
+        $livresData = [
+            [
+                'code' => 'les_miserables',
+                'titre' => 'Les Miserables',
+                'dateSortie' => '1862-01-01',
+                'langue' => 'Francais',
+                'auteurs' => ['hugo'],
+                'categories' => ['roman', 'histoire'],
+            ],
+            [
+                'code' => 'notre_dame_de_paris',
+                'titre' => 'Notre-Dame de Paris',
+                'dateSortie' => '1831-01-01',
+                'langue' => 'Francais',
+                'auteurs' => ['hugo'],
+                'categories' => ['roman', 'histoire'],
+            ],
+            [
+                'code' => '1984',
+                'titre' => '1984',
+                'dateSortie' => '1949-06-08',
+                'langue' => 'English',
+                'auteurs' => ['orwell'],
+                'categories' => ['roman', 'dystopie'],
+            ],
+            [
+                'code' => 'animal_farm',
+                'titre' => 'Animal Farm',
+                'dateSortie' => '1945-08-17',
+                'langue' => 'English',
+                'auteurs' => ['orwell'],
+                'categories' => ['roman', 'dystopie'],
+            ],
+            [
+                'code' => 'foundation',
+                'titre' => 'Foundation',
+                'dateSortie' => '1951-06-01',
+                'langue' => 'English',
+                'auteurs' => ['asimov'],
+                'categories' => ['science_fiction'],
+            ],
+            [
+                'code' => 'i_robot',
+                'titre' => 'I, Robot',
+                'dateSortie' => '1950-12-02',
+                'langue' => 'English',
+                'auteurs' => ['asimov'],
+                'categories' => ['science_fiction'],
+            ],
+            [
+                'code' => 'frankenstein',
+                'titre' => 'Frankenstein',
+                'dateSortie' => '1818-01-01',
+                'langue' => 'English',
+                'auteurs' => ['shelley'],
+                'categories' => ['fantastique', 'science_fiction'],
+            ],
+            [
+                'code' => 'orient_express',
+                'titre' => 'Murder on the Orient Express',
+                'dateSortie' => '1934-01-01',
+                'langue' => 'English',
+                'auteurs' => ['christie'],
+                'categories' => ['policier'],
+            ],
+            [
+                'code' => 'petit_prince',
+                'titre' => 'Le Petit Prince',
+                'dateSortie' => '1943-04-06',
+                'langue' => 'Francais',
+                'auteurs' => ['saint_exupery'],
+                'categories' => ['jeunesse', 'fantastique'],
+            ],
+            [
+                'code' => 'voyage_centre_terre',
+                'titre' => 'Voyage au centre de la Terre',
+                'dateSortie' => '1864-11-25',
+                'langue' => 'Francais',
+                'auteurs' => ['verne'],
+                'categories' => ['aventure', 'science_fiction'],
+            ],
+            [
+                'code' => 'dune',
+                'titre' => 'Dune',
+                'dateSortie' => '1965-08-01',
+                'langue' => 'English',
+                'auteurs' => ['herbert'],
+                'categories' => ['science_fiction'],
+            ],
+            [
+                'code' => 'sapiens',
+                'titre' => 'Sapiens',
+                'dateSortie' => '2011-01-01',
+                'langue' => 'English',
+                'auteurs' => ['harari'],
+                'categories' => ['histoire'],
+            ],
+            [
+                'code' => 'clean_code',
+                'titre' => 'Clean Code',
+                'dateSortie' => '2008-08-01',
+                'langue' => 'English',
+                'auteurs' => ['martin'],
+                'categories' => ['informatique'],
+            ],
+        ];
 
-        $e2 = new Emprunt();
-        $e2->setUtilisateur($adherents[0])->setLivre($livres[0]) // Alice - Dune
-           ->setDateEmprunt(new \DateTime('2025-03-05')); // Pas de date de retour = en cours
-        $manager->persist($e2);
+        foreach ($livresData as $data) {
+            $livre = new Livre();
+            $livre->setTitre($data['titre'])
+                ->setDateSortie(new \DateTime($data['dateSortie']))
+                ->setLangue($data['langue']);
 
-        for ($j = 0; $j < 13; $j++) {
-            $emp = new Emprunt();
-            $emp->setUtilisateur($adherents[array_rand($adherents)])
-                ->setLivre($livres[array_rand($livres)])
-                ->setDateEmprunt(new \DateTime('-' . ($j + 5) . ' days'));
- 
-            if ($j % 3 == 0) {
-                $emp->setDateRetour(new \DateTime('-1 day'));
+            foreach ($data['auteurs'] as $auteurCode) {
+                $livre->addAuteur($auteurs[$auteurCode]);
             }
-            $manager->persist($emp);
+            foreach ($data['categories'] as $categorieCode) {
+                $livre->addCategory($categories[$categorieCode]);
+            }
+
+            $manager->persist($livre);
+        }
+
+        // Utilisateurs
+        $admin = new Utilisateur();
+        $admin->setEmail('admin@biblio.fr')
+            ->setNom('Admin')
+            ->setPrenom('Principal')
+            ->setRoles(['ROLE_ADMIN', 'ROLE_RESPONSABLE', 'ROLE_BIBLIOTHECAIRE', 'ROLE_ADHERENT'])
+            ->setDateAdhesion(new \DateTime('2024-09-01'))
+            ->setDateNaiss(new \DateTime('1985-03-10'))
+            ->setAdressePostale('10 rue de l Administration, 31000 Toulouse')
+            ->setNumTel('0102030405')
+            ->setPassword($this->hasher->hashPassword($admin, 'admin'));
+        $manager->persist($admin);
+
+        $usersData = [
+            [
+                'email' => 'alice.dupont@biblio.fr',
+                'nom' => 'Dupont',
+                'prenom' => 'Alice',
+                'roles' => ['ROLE_ADHERENT'],
+                'dateAdhesion' => '2025-01-15',
+                'dateNaiss' => '1998-05-12',
+                'adresse' => '12 rue Victor Hugo, 31000 Toulouse',
+                'numTel' => '0612345678',
+                'password' => 'password',
+            ],
+            [
+                'email' => 'anthony.durand@biblio.fr',
+                'nom' => 'Durand',
+                'prenom' => 'Anthony',
+                'roles' => ['ROLE_ADHERENT'],
+                'dateAdhesion' => '2025-02-10',
+                'dateNaiss' => '1996-01-20',
+                'adresse' => '5 rue des Lilas, 31000 Toulouse',
+                'numTel' => '0612340001',
+                'password' => 'password',
+            ],
+            [
+                'email' => 'andre.lefevre@biblio.fr',
+                'nom' => 'Lefevre',
+                'prenom' => 'Andre',
+                'roles' => ['ROLE_ADHERENT'],
+                'dateAdhesion' => '2025-02-12',
+                'dateNaiss' => '1994-09-02',
+                'adresse' => '18 avenue des Arts, 31000 Toulouse',
+                'numTel' => '0612340002',
+                'password' => 'password',
+            ],
+            [
+                'email' => 'bruno.martin@biblio.fr',
+                'nom' => 'Martin',
+                'prenom' => 'Bruno',
+                'roles' => ['ROLE_BIBLIOTHECAIRE'],
+                'dateAdhesion' => '2024-11-02',
+                'dateNaiss' => '1988-06-14',
+                'adresse' => '2 place du Capitole, 31000 Toulouse',
+                'numTel' => '0612340003',
+                'password' => 'password',
+            ],
+            [
+                'email' => 'robert.bertrand@biblio.fr',
+                'nom' => 'Bertrand',
+                'prenom' => 'Robert',
+                'roles' => ['ROLE_RESPONSABLE'],
+                'dateAdhesion' => '2024-10-10',
+                'dateNaiss' => '1980-03-22',
+                'adresse' => '40 boulevard Gambetta, 31000 Toulouse',
+                'numTel' => '0612340004',
+                'password' => 'password',
+            ],
+        ];
+
+        foreach ($usersData as $data) {
+            $user = new Utilisateur();
+            $user->setEmail($data['email'])
+                ->setNom($data['nom'])
+                ->setPrenom($data['prenom'])
+                ->setRoles($data['roles'])
+                ->setDateAdhesion(new \DateTime($data['dateAdhesion']))
+                ->setDateNaiss(new \DateTime($data['dateNaiss']))
+                ->setAdressePostale($data['adresse'])
+                ->setNumTel($data['numTel'])
+                ->setPassword($this->hasher->hashPassword($user, $data['password']));
+            $manager->persist($user);
         }
 
         $manager->flush();

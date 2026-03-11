@@ -135,7 +135,7 @@ export class LivresList implements OnInit {
   }
 
   getCouverture(livre: Livre) {
-    return livre.photoCouverture || '/images/book-placeholder.svg';
+    return livre.photoCouverture || this.getFallbackCover(livre.id);
   }
 
   getAuteursLabel(livre: Livre) {
@@ -151,5 +151,18 @@ export class LivresList implements OnInit {
     const prenom = auteur.prenom?.trim();
     const nom = auteur.nom?.trim();
     return [prenom, nom].filter(Boolean).join(' ') || nom || '';
+  }
+
+  private getFallbackCover(id?: number) {
+    const covers = [
+      '/images/covers/cover-1.svg',
+      '/images/covers/cover-2.svg',
+      '/images/covers/cover-3.svg',
+      '/images/covers/cover-4.svg',
+      '/images/covers/cover-5.svg',
+      '/images/covers/cover-6.svg'
+    ];
+    if (!id) return covers[0];
+    return covers[Math.abs(id) % covers.length];
   }
 }

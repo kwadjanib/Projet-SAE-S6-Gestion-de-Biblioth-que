@@ -58,8 +58,8 @@ export class LivreDetail implements OnInit {
     });
   }
 
-  getCouverture(livre?: { photoCouverture?: string } | null) {
-    return livre?.photoCouverture || '/images/book-placeholder.svg';
+  getCouverture(livre?: { photoCouverture?: string; id?: number } | null) {
+    return livre?.photoCouverture || this.getFallbackCover(livre?.id);
   }
 
   getAuteurPhoto(auteur?: Auteur | null) {
@@ -70,5 +70,18 @@ export class LivreDetail implements OnInit {
     const prenom = auteur?.prenom?.trim();
     const nom = auteur?.nom?.trim();
     return [prenom, nom].filter(Boolean).join(' ') || nom || 'Auteur';
+  }
+
+  private getFallbackCover(id?: number) {
+    const covers = [
+      '/images/covers/cover-1.svg',
+      '/images/covers/cover-2.svg',
+      '/images/covers/cover-3.svg',
+      '/images/covers/cover-4.svg',
+      '/images/covers/cover-5.svg',
+      '/images/covers/cover-6.svg'
+    ];
+    if (!id) return covers[0];
+    return covers[Math.abs(id) % covers.length];
   }
 }

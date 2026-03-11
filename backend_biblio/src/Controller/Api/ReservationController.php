@@ -19,7 +19,9 @@ class ReservationController extends AbstractController
     #[IsGranted('ROLE_ADHERENT')]
     public function index(ReservationsRepository $reservationsRepository): JsonResponse
     {
-        $reservations = $reservationsRepository->findBy(['utilisateur' => $this->getUser()]);
+        $cutoff = (new \DateTimeImmutable())->modify('-7 days');
+        $reservationsRepository->purgeExpired($cutoff);
+        $reservations = $reservationsRepository->findActiveByUser($this->getUser(), $cutoff);
         return $this->json($reservations, 200, [], ['groups' => 'reservation:read']);
     }
 
@@ -56,7 +58,10 @@ class ReservationController extends AbstractController
 
         $user = $this->getUser();
 
-        $reservationCount = $reservationsRepository->count(['utilisateur' => $user]);
+        $cutoff = (new \DateTimeImmutable())->modify('-7 days');
+        $reservationsRepository->purgeExpired($cutoff);
+
+        $reservationCount = $reservationsRepository->countActiveForUser($user, $cutoff);
         if ($reservationCount >= 3) {
             return $this->json(['message' => 'Limite de 3 reservations atteinte'], 409);
         }
@@ -65,10 +70,7 @@ class ReservationController extends AbstractController
             return $this->json(['message' => 'Livre deja emprunte'], 409);
         }
 
-        $existing = $reservationsRepository->findOneBy([
-            'utilisateur' => $user,
-            'livre' => $livre
-        ]);
+        $existing = $reservationsRepository->findActiveByLivre($livre, $cutoff);
         if ($existing) {
             return $this->json(['message' => 'Livre deja reserve'], 409);
         }

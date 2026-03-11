@@ -1,0 +1,14 @@
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6f0ff"/>
+      <stop offset="0.55" stop-color="#c7dbf5"/>
+      <stop offset="1" stop-color="#9eb6dd"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg)"/>
+  <rect x="30" y="30" width="340" height="540" rx="20" fill="rgba(255,255,255,0.5)"/>
+  <rect x="70" y="120" width="260" height="10" fill="rgba(255,255,255,0.5)"/>
+  <rect x="70" y="150" width="200" height="10" fill="rgba(255,255,255,0.4)"/>
+  <text x="200" y="320" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#3e5a7a" letter-spacing="2">ARCHIVES</text>
+</svg>

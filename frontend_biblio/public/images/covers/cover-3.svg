@@ -1,0 +1,14 @@
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7e6ff"/>
+      <stop offset="0.6" stop-color="#e2c6f0"/>
+      <stop offset="1" stop-color="#c39ad9"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg)"/>
+  <rect x="34" y="34" width="332" height="532" rx="22" fill="rgba(255,255,255,0.45)"/>
+  <circle cx="90" cy="130" r="36" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="130" cy="170" r="24" fill="rgba(255,255,255,0.3)"/>
+  <text x="200" y="330" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#5a3e6f" letter-spacing="2">ROMAN</text>
+</svg>

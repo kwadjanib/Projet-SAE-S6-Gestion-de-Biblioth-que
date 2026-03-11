@@ -1,0 +1,14 @@
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6f7f6"/>
+      <stop offset="0.6" stop-color="#c0e3e1"/>
+      <stop offset="1" stop-color="#8fc1bf"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#bg)"/>
+  <rect x="32" y="32" width="336" height="536" rx="18" fill="rgba(255,255,255,0.45)"/>
+  <circle cx="90" cy="470" r="36" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="140" cy="470" r="28" fill="rgba(255,255,255,0.35)"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#2f5f5d" letter-spacing="2">SCIENCE</text>
+</svg>
